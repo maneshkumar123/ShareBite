@@ -1,0 +1,421 @@
+/* ===================================================
+   WHY SHAREBITE SECTION
+   Fully Fluid Responsive Design
+   Uses clamp(), calc(), and viewport units for all sizes
+   =================================================== */
+
+/* ===== SECTION CONTAINER ===== */
+.why-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 0 clamp(60px, 8vw, 100px);
+    background-color: rgb(217, 217, 217);
+    overflow: hidden;
+    gap: clamp(15px, 3vw, 30px);
+}
+
+/* ===== DIVIDER LINES ===== */
+.why-divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(13, 13, 13, 0.15);
+    flex-shrink: 0;
+}
+
+/* ===== INFINITE MARQUEE HEADLINE ===== */
+@keyframes whyMarqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.why-headline-wrapper {
+    width: 100%;
+    height: clamp(100px, 18vw, 240px);
+    overflow: hidden;
+    position: relative;
+    padding-top: clamp(25px, 4vw, 60px);
+    pointer-events: none;
+    background: transparent;
+}
+
+.why-marquee-track {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: max-content;
+    animation: whyMarqueeScroll 25s linear infinite;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Pause on hover */
+.why-headline-wrapper:hover .why-marquee-track {
+    animation-play-state: paused;
+}
+
+.why-marquee-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0;
+}
+
+.why-marquee-text {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    /* Fluid font size: min 40px, scales with viewport, max 140px */
+    font-size: clamp(40px, 10vw, 140px);
+    font-weight: 400;
+    color: rgb(13, 13, 13);
+    line-height: 1;
+    margin: 0;
+    padding: 0 clamp(15px, 3vw, 40px);
+    white-space: nowrap;
+    letter-spacing: -0.03em;
+    user-select: none;
+    flex-shrink: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+.why-marquee-separator {
+    font-size: clamp(18px, 3vw, 40px);
+    color: rgba(13, 13, 13, 0.3);
+    padding: 0 clamp(8px, 1.5vw, 20px);
+    flex-shrink: 0;
+}
+
+/* ===== SECTION HEADER - 3 Part Layout ===== */
+.why-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1144px;
+    padding: clamp(16px, 3vw, 30px) clamp(16px, 2vw, 22px);
+    box-sizing: border-box;
+}
+
+.why-header-left {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(11px, 1.2vw, 14px);
+    font-weight: 500;
+    color: rgb(13, 13, 13);
+    margin: 0;
+    letter-spacing: 0.02em;
+}
+
+.why-header-middle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(11px, 1.2vw, 14px);
+    font-weight: 400;
+    color: rgba(13, 13, 13, 0.5);
+    letter-spacing: 0.02em;
+}
+
+.why-header-right {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(11px, 1.2vw, 14px);
+    font-weight: 400;
+    color: rgba(13, 13, 13, 0.7);
+    letter-spacing: 0.02em;
+}
+
+/* ===== HEADLINES ===== */
+.why-headline {
+    display: block;
+    /* Fluid headline: min 42px, scales with viewport, max 120px */
+    font-size: clamp(42px, 9vw, 120px);
+    font-weight: 400;
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    color: rgb(13, 13, 13);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    margin: 0;
+    padding: 0 clamp(16px, 2vw, 0px);
+    text-align: center;
+    width: 100%;
+
+    /* Animation optimization */
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+
+    /* Text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Top headline: "Bridging" - sits above content */
+.why-headline-top {
+    margin-bottom: clamp(10px, 2vw, 20px);
+}
+
+/* Bottom headline: "the gap." - sits above final divider */
+.why-headline-bottom {
+    margin-top: clamp(10px, 2vw, 20px);
+    margin-bottom: clamp(20px, 3vw, 40px);
+    /* Space before divider */
+}
+
+/* Bottom divider - clear separation */
+.why-divider-bottom {
+    margin-top: 0;
+}
+
+/* ===== CONTENT WRAPPER ===== */
+.why-content {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: relative;
+    width: 100%;
+    max-width: 1144px;
+    /* Fluid height: min 350px on mobile, max 450px on desktop */
+    min-height: clamp(350px, 35vw, 450px);
+    gap: clamp(20px, 3vw, 0px);
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+    background-color: transparent;
+    padding: 0 clamp(16px, 2vw, 22px);
+    box-sizing: border-box;
+}
+
+/* ===== LEFT: IMAGE CAROUSEL ===== */
+.why-carousel-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Fluid width: takes 100% on mobile (<600px), 50% on larger */
+    width: clamp(280px, 45vw, 548px);
+    min-width: 280px;
+    /* Fluid height */
+    height: clamp(350px, 35vw, 450px);
+    flex: 1 1 280px;
+    overflow: clip;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: transparent;
+}
+
+.why-carousel-track {
+    position: relative;
+    width: 100%;
+    height: 1600px;
+
+    /* Animation optimization */
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+.why-carousel-item {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Fluid width: min 260px, scales with viewport, max 400px */
+    width: clamp(260px, 32vw, 400px);
+    /* Fluid height: min 200px, scales with viewport, max 300px */
+    height: clamp(200px, 22vw, 300px);
+}
+
+.why-carousel-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: clamp(10px, 1.5vw, 16px);
+    margin: 0;
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+
+    /* Hover effect */
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease;
+}
+
+.why-carousel-image:hover {
+    transform: scale(1.03);
+    filter: brightness(1.08);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+}
+
+/* ===== RIGHT: TEXT COLUMN ===== */
+.why-text-column {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Fluid width matching carousel */
+    width: clamp(280px, 45vw, 548px);
+    min-width: 280px;
+    height: auto;
+    min-height: clamp(200px, 20vw, 385px);
+    flex: 1 1 280px;
+    padding: 0 0 0 clamp(0px, 3vw, 40px);
+    gap: clamp(16px, 2vw, 20px);
+    align-items: flex-start;
+    justify-content: flex-end;
+    background-color: transparent;
+    box-sizing: border-box;
+}
+
+.why-text-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 508px;
+    gap: clamp(12px, 1.5vw, 16px);
+    align-items: flex-start;
+}
+
+.why-paragraph {
+    /* Fluid font size: min 14px, scales, max 18px */
+    font-size: clamp(14px, 1.4vw, 18px);
+    font-weight: 400;
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    color: rgb(80, 80, 80);
+    /* Fluid line height */
+    line-height: clamp(22px, 2.2vw, 28px);
+    letter-spacing: normal;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
+.why-paragraph-bold {
+    color: rgb(13, 13, 13);
+    font-weight: 500;
+}
+
+/* ===== BUTTON ===== */
+.why-button {
+    display: flex;
+    position: relative;
+    width: auto;
+    /* Fluid height */
+    height: clamp(44px, 4vw, 52px);
+    padding: clamp(10px, 1vw, 12px) clamp(24px, 2.5vw, 30px);
+    margin: 0;
+    background-color: transparent;
+    border: 2px solid rgb(13, 13, 13);
+    border-radius: 259px;
+    cursor: pointer;
+    text-decoration: none;
+
+    /* Fluid font size */
+    font-size: clamp(13px, 1.3vw, 16px);
+    font-weight: 500;
+    color: rgb(13, 13, 13);
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    text-align: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    transition: all 0.3s ease;
+    will-change: transform, color, background-color;
+}
+
+.why-button:hover {
+    background-color: rgb(13, 13, 13);
+    color: rgb(217, 217, 217);
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(13, 13, 13, 0.15);
+}
+
+.why-button:active {
+    transform: scale(0.98);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.why-button:focus {
+    outline: 2px solid rgb(125, 255, 18);
+    outline-offset: 2px;
+}
+
+.why-button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* ===== RESPONSIVE: MOBILE LAYOUT ===== */
+/* Only needed for layout changes, not sizing (that's handled by clamp) */
+@media (max-width: 700px) {
+    .why-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .why-carousel-container {
+        width: 100%;
+        max-width: 400px;
+        height: clamp(380px, 50vh, 500px);
+        order: 1;
+    }
+
+    .why-carousel-track {
+        height: 1800px;
+    }
+
+    .why-carousel-item {
+        width: min(85%, 340px);
+        height: clamp(220px, 30vw, 280px);
+    }
+
+    .why-text-column {
+        width: 100%;
+        padding: 0;
+        justify-content: flex-start;
+        order: 2;
+    }
+
+    .why-button {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* ===== ACCESSIBILITY ===== */
+@media (prefers-reduced-motion: reduce) {
+    .why-headline {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .why-carousel-track {
+        transform: none !important;
+    }
+
+    .why-marquee-track {
+        animation: none;
+    }
+
+    .why-carousel-image:hover {
+        transform: none;
+    }
+
+    .why-button:hover {
+        transform: none;
+    }
+}

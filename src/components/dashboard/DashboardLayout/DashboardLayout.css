@@ -1,0 +1,76 @@
+/**
+ * Dashboard Layout Styles
+ * 
+ * Mobile-first with sidebar overlay on small screens,
+ * persistent sidebar on desktop.
+ */
+
+.dashboard-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--color-bg-primary);
+}
+
+/* Mobile Overlay */
+.dashboard-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: var(--z-overlay);
+    animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Main Content Area */
+.dashboard-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Page Content */
+.dashboard-content {
+    flex: 1;
+    padding: var(--spacing-md);
+    overflow-y: auto;
+}
+
+/* ==========================================
+   RESPONSIVE - Tablet (768px+)
+   ========================================== */
+
+@media (min-width: 768px) {
+    .dashboard-content {
+        padding: var(--spacing-lg);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - Desktop (1024px+)
+   ========================================== */
+
+@media (min-width: 1024px) {
+    .dashboard-main {
+        margin-left: var(--sidebar-width);
+    }
+
+    .dashboard-overlay {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding: var(--spacing-xl);
+    }
+}

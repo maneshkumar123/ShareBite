@@ -1,0 +1,80 @@
+/**
+ * Card Component Styles
+ */
+
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+}
+
+/* Padding Variants */
+.card--padding-none {
+    padding: 0;
+}
+
+.card--padding-sm {
+    padding: var(--spacing-md);
+}
+
+.card--padding-md {
+    padding: var(--spacing-lg);
+}
+
+.card--padding-lg {
+    padding: var(--spacing-xl);
+}
+
+/* Hover Effect */
+.card--hover:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Card Header */
+.card__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: var(--spacing-md);
+}
+
+.card__header-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.card__header h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.card__header p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* Card Body */
+.card__body {
+    color: var(--color-text-primary);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .card--padding-md {
+        padding: var(--spacing-md);
+    }
+
+    .card--padding-lg {
+        padding: var(--spacing-lg);
+    }
+}

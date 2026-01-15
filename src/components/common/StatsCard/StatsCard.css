@@ -1,0 +1,123 @@
+/**
+ * StatsCard Component Styles
+ */
+
+.stats-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-normal);
+}
+
+.stats-card:hover {
+    border-color: var(--color-border-hover);
+    transform: translateY(-2px);
+}
+
+/* Icon Container */
+.stats-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
+}
+
+.stats-card__icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Color Variants */
+.stats-card--accent .stats-card__icon {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+}
+
+.stats-card--success .stats-card__icon {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+}
+
+.stats-card--warning .stats-card__icon {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning);
+}
+
+.stats-card--error .stats-card__icon {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+}
+
+/* Content */
+.stats-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.stats-card__value {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-tight);
+}
+
+.stats-card__label {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* Trend Indicator */
+.stats-card__trend {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    margin-top: var(--spacing-xs);
+}
+
+.stats-card__trend--positive {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--color-success);
+}
+
+.stats-card__trend--negative {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+}
+
+.stats-card__trend-arrow {
+    font-weight: var(--font-weight-bold);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .stats-card {
+        padding: var(--spacing-md);
+    }
+
+    .stats-card__icon {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stats-card__icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .stats-card__value {
+        font-size: var(--font-size-xl);
+    }
+}

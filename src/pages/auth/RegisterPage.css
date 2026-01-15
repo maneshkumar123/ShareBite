@@ -1,0 +1,561 @@
+/* ==============================================
+   REGISTER PAGE - DYNAMIC 2-COLUMN LAYOUT
+   Premium Split-Screen Auth Design
+   Matching Homepage Aesthetics
+   ============================================== */
+
+/* Import Inter font for consistency with homepage */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   ANIMATION KEYFRAMES
+   ============================================== */
+
+@keyframes headingBounceUp {
+    0% {
+        opacity: 0;
+        transform: translateY(45px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(-8px);
+    }
+
+    80% {
+        transform: translateY(3px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes subtitleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(60px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 100% center;
+    }
+
+    100% {
+        background-position: 0% center;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fieldFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==============================================
+   PAGE CONTAINER - VIEWPORT CENTERED
+   ============================================== */
+
+.register-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #121212;
+    padding: clamp(80px, 10vh, 120px) clamp(16px, 4vw, 48px) clamp(40px, 6vh, 80px);
+    box-sizing: border-box;
+}
+
+.register-container {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    /* Right side wider for form */
+    gap: clamp(2rem, 4vw, 5rem);
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
+}
+
+/* ==============================================
+   LEFT SIDE - Animated Title
+   ============================================== */
+
+.register-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: clamp(0px, 2vw, 30px);
+}
+
+.register-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.register-title-container {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(45px);
+}
+
+.register-text-wrapper.visible .register-title-container {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.register-text-wrapper.visible .register-title-container:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.register-text-wrapper.visible .register-title-container:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.register-text-wrapper.visible .register-title-container:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.register-text-wrapper.visible .register-title-container:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.register-title-line {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: clamp(32px, 4.5vw, 60px);
+    font-weight: 500;
+    color: #F7F7F7;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0;
+    padding: 0;
+}
+
+/* Rotating text container */
+.rotating-container {
+    overflow: visible !important;
+    height: clamp(40px, 5.5vw, 65px);
+}
+
+.rotating-text-wrapper {
+    position: relative;
+    height: clamp(40px, 5.5vw, 65px);
+    width: 100%;
+    overflow: hidden;
+}
+
+.rotating-phrase {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+
+.rotating-phrase.active {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(90deg, #7DFF12 0%, #A3FF33 50%, #7DFF12 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}
+
+.rotating-phrase.exiting {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.register-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 400;
+    color: #777777;
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 1.25rem 0 0;
+    opacity: 0;
+}
+
+.register-text-wrapper.visible .register-subtitle {
+    animation: subtitleFadeIn 0.8s ease-out forwards;
+    animation-delay: 0.6s;
+}
+
+/* ==============================================
+   RIGHT SIDE - Form Card (WIDER, 2-COLUMN GRID)
+   ============================================== */
+
+.register-right {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(60px);
+}
+
+.register-right.visible {
+    animation: cardSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 560px;
+    /* Wider for 2-column layout */
+    background: linear-gradient(145deg,
+            rgba(255, 255, 255, 0.035) 0%,
+            rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 24px;
+    padding: clamp(24px, 3vw, 32px);
+    box-sizing: border-box;
+    backdrop-filter: blur(24px);
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.register-card-header {
+    text-align: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    /* Divider line like HowItWorks */
+}
+
+.register-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(20px, 1.8vw, 24px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    /* Matches Hero title */
+    color: #F7F7F7;
+    margin: 0 0 0.3rem;
+}
+
+.register-card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666666;
+    margin: 0;
+}
+
+/* ==============================================
+   FORM - 2-COLUMN GRID LAYOUT
+   ============================================== */
+
+.register-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.register-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    margin-bottom: 1rem;
+}
+
+/* Field wrappers for grid placement */
+.register-field-wrapper {
+    animation: fieldFadeIn 0.35s ease-out forwards;
+    opacity: 0;
+}
+
+.register-field-wrapper.half-width {
+    grid-column: span 1;
+}
+
+.register-field-wrapper.full-width {
+    grid-column: span 2;
+}
+
+/* Staggered animation delays */
+.register-field-wrapper:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.register-field-wrapper:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.register-field-wrapper:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.register-field-wrapper:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+.register-field-wrapper:nth-child(5) {
+    animation-delay: 0.25s;
+}
+
+.register-field-wrapper:nth-child(6) {
+    animation-delay: 0.3s;
+}
+
+/* ==============================================
+   SUBMIT BUTTON - PREMIUM STYLE
+   ============================================== */
+
+.register-submit-btn {
+    width: 100%;
+    padding: clamp(13px, 1.3vw, 15px) 24px;
+    background: linear-gradient(135deg, #7DFF12 0%, #6eeb00 100%);
+    color: #121212;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0.25rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.25),
+            transparent);
+    transition: left 0.5s ease;
+}
+
+.register-submit-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.register-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(125, 255, 18, 0.4);
+}
+
+.register-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.register-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.register-submit-btn:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+}
+
+/* Loading spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(18, 18, 18, 0.3);
+    border-top-color: #121212;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Error message */
+.register-error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #EF4444;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+/* Login link */
+.register-login-link {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #777777;
+    margin: 1rem 0 0;
+}
+
+.register-login-link a {
+    color: #7DFF12;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.register-login-link a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+/* Large tablet / small desktop */
+@media (max-width: 1100px) {
+    .register-container {
+        grid-template-columns: 1fr 1.4fr;
+    }
+
+    .register-card {
+        max-width: 500px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .register-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        max-width: 560px;
+    }
+
+    .register-left {
+        text-align: center;
+        padding-right: 0;
+    }
+
+    .register-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .register-title-line {
+        justify-content: center;
+    }
+
+    .rotating-phrase {
+        justify-content: center;
+    }
+
+    .register-right {
+        justify-content: center;
+    }
+
+    .register-card {
+        max-width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 560px) {
+    .register-page {
+        padding: 80px 16px 40px;
+    }
+
+    .register-card {
+        padding: 20px 18px;
+        border-radius: 20px;
+    }
+
+    /* Stack to single column on mobile */
+    .register-form-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .register-field-wrapper.half-width,
+    .register-field-wrapper.full-width {
+        grid-column: span 1;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+    .register-page {
+        padding: 70px 12px 30px;
+    }
+
+    .register-card {
+        padding: 18px 14px;
+        border-radius: 16px;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .register-title-container,
+    .register-subtitle,
+    .register-right,
+    .rotating-phrase,
+    .register-field-wrapper {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .register-submit-btn:hover,
+    .register-submit-btn::before {
+        transform: none;
+    }
+
+    .spinner {
+        animation: none;
+    }
+}

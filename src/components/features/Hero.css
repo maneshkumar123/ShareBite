@@ -1,0 +1,621 @@
+/* ==============================================
+   HERO SECTION - Creative Apes Animation System
+   Premium animations with spring physics & timing
+   ============================================== */
+
+/* Import Inter Display font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   ANIMATION KEYFRAMES
+   ============================================== */
+
+/* Navbar Animation: Slides down from -79px */
+@keyframes navbarSlideDown {
+    from {
+        opacity: 0.001;
+        transform: translateY(-79px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo Animation: Slides down from -520px */
+@keyframes logoSlideDown {
+    from {
+        opacity: 0.001;
+        transform: translateY(-520px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Heading Animation: Bounces up from +45px (Spring effect) */
+@keyframes headingBounceUp {
+    0% {
+        opacity: 0.001;
+        transform: translateY(45px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(-8px);
+        /* Overshoot */
+    }
+
+    80% {
+        transform: translateY(3px);
+        /* Bounce back */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Left Content Animation: Slides from -1440px with bounce */
+@keyframes contentSlideIn {
+    0% {
+        opacity: 0.9;
+        transform: translateX(-1440px);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateX(20px);
+        /* Slight overshoot */
+    }
+
+    85% {
+        transform: translateX(-5px);
+        /* Bounce back */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Feature Card Animation: Zoom in from corner */
+@keyframes featureZoomIn {
+    from {
+        opacity: 0.1;
+        transform: translate(370px, -370px) scale(0.3);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+}
+
+/* Subtitle fade in */
+@keyframes subtitleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* CTA buttons slide up */
+@keyframes ctaSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==============================================
+   HERO SECTION CONTAINER
+   ============================================== */
+
+.hero-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    min-height: 100vh;
+    background-color: #121212;
+    /* Dark charcoal */
+    padding: 120px 2rem 80px;
+    /* Top padding for fixed nav */
+    overflow: hidden;
+}
+
+.hero-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+/* ==============================================
+   LEFT SIDE - Animated Title Text
+   ============================================== */
+
+.hero-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    /* Animation: Slides in from left */
+    opacity: 0;
+    transform: translateX(-100px);
+    animation: contentSlideIn 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: 0.3s;
+    /* 3s in original, reduced for better UX */
+}
+
+.hero-title-container {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+
+    /* Initial hidden state - animation handles appearance */
+    opacity: 0;
+    transform: translateY(45px);
+}
+
+.hero-title-line {
+    display: block;
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 72px;
+    font-weight: 400;
+    color: #F7F7F7;
+    /* Off-white */
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+
+    /* Performance optimization */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* Staggered heading animations with spring effect */
+.hero-title-container:nth-child(1) {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.5s;
+}
+
+.hero-title-container:nth-child(2) {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.65s;
+}
+
+.hero-title-container:nth-child(3) {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.8s;
+}
+
+.hero-title-container:nth-child(4) {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.95s;
+}
+
+/* ==============================================
+   ROTATING TEXT ANIMATION - Professional Carousel
+   ============================================== */
+
+/* Container for the rotating element */
+.rotating-container {
+    overflow: visible !important;
+    /* Override parent hidden */
+    height: 80px;
+    /* Fixed height for the rotation area */
+    opacity: 1 !important;
+    /* Ensure visibility */
+    transform: none !important;
+    /* Override parent transform */
+}
+
+/* Override the nth-child animation for rotating container */
+.hero-title-container.rotating-container {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.95s;
+}
+
+.rotating-text-wrapper {
+    position: relative;
+    height: 80px;
+    width: 100%;
+    min-width: 400px;
+    /* Ensure minimum width for text */
+    overflow: hidden;
+}
+
+/* Each rotating phrase */
+.rotating-phrase {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-width: 400px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    /* Initial state: below and invisible */
+    opacity: 0;
+    transform: translateY(100%);
+
+    /* Animation transitions */
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+
+/* Active phrase: visible and in position */
+.rotating-phrase.active {
+    opacity: 1;
+    transform: translateY(0);
+
+    /* Lime green gradient text for active phrase */
+    background: linear-gradient(90deg, #7DFF12 0%, #A3FF33 50%, #7DFF12 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    /* Subtle animation on the gradient */
+    animation: gradientShift 3s ease infinite;
+}
+
+/* Exiting phrase: moves up and fades out */
+.rotating-phrase.exiting {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+/* Gradient shift animation for active text */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 100% center;
+    }
+
+    100% {
+        background-position: 0% center;
+    }
+}
+
+/* Glow effect for the rotating text - Subtle and Premium */
+.rotating-phrase.active::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    /* Reduced from 120% for tighter glow */
+    height: 60%;
+    /* Smaller, more focused glow */
+    background: radial-gradient(circle at center,
+            rgba(125, 255, 18, 0.06) 0%,
+            /* Much lower opacity (6% instead of 15%) */
+            rgba(125, 255, 18, 0.03) 25%,
+            /* Gentle mid-fade */
+            transparent 35%
+            /* Faster fade (35% instead of 70%) */
+        );
+    pointer-events: none;
+    z-index: -1;
+    filter: blur(20px);
+    /* Soft blur for premium look */
+}
+
+/* Hero Subtitle */
+.hero-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #999999;
+    /* Gray */
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 1.5rem 0 0;
+
+    /* Animation */
+    opacity: 0;
+    animation: subtitleFadeIn 1s cubic-bezier(0.44, 0, 0.56, 1) forwards;
+    animation-delay: 1.2s;
+}
+
+/* ==============================================
+   CTA Buttons
+   ============================================== */
+
+.hero-cta-container {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+
+    /* Animation */
+    opacity: 0;
+    animation: ctaSlideUp 1s cubic-bezier(0.44, 0, 0.56, 1) forwards;
+    animation-delay: 1.4s;
+}
+
+.hero-cta-primary,
+.hero-cta-secondary {
+    padding: 1rem 2.5rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.44, 0, 0.56, 1);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.hero-cta-primary {
+    background: #7DFF12;
+    /* Lime green accent */
+    color: #121212;
+    border-color: #7DFF12;
+}
+
+.hero-cta-primary:hover {
+    background: #6eeb00;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(125, 255, 18, 0.3);
+}
+
+.hero-cta-secondary {
+    background: transparent;
+    color: #F7F7F7;
+    border-color: #F7F7F7;
+}
+
+.hero-cta-secondary:hover {
+    background: rgba(247, 247, 247, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(247, 247, 247, 0.15);
+}
+
+/* ==============================================
+   RIGHT SIDE - Rotating Image Carousel
+   ============================================== */
+
+.hero-image-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 500px;
+    border-radius: 24px;
+    overflow: hidden;
+
+    /* Animation: Zooms in from corner */
+    opacity: 0;
+    transform: translate(370px, -370px) scale(0.3);
+    animation: featureZoomIn 1.4s cubic-bezier(0.96, -0.02, 0.38, 1.01) forwards;
+    animation-delay: 0.6s;
+
+    /* Shadow for depth */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.image-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1;
+}
+
+.carousel-image.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.carousel-image.exiting {
+    opacity: 0;
+    z-index: 1;
+}
+
+.carousel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ==============================================
+   RIGHT SIDE - VIDEO CARD (Smaller, balanced size)
+   ============================================== */
+
+.hero-video-card {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    /* Reduced from 600px */
+    height: 500px;
+    /* Reduced from 500px */
+    border-radius: 5px;
+    overflow: hidden;
+
+    /* Animation: Zooms in from corner */
+    opacity: 0;
+    transform: translate(370px, -370px) scale(0.3);
+    animation: featureZoomIn 1.4s cubic-bezier(0.96, -0.02, 0.38, 1.01) forwards;
+    animation-delay: 0.6s;
+
+    /* Shadow for depth */
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+/* Tablet (810px - 1199px) */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+
+    .hero-title-line {
+        font-size: 56px;
+    }
+
+    .hero-image-carousel {
+        max-width: 600px;
+        height: 400px;
+        margin: 0 auto;
+        /* Adjust animation for tablet */
+        transform: translate(200px, -200px) scale(0.3);
+    }
+
+    @keyframes featureZoomIn {
+        from {
+            opacity: 0.1;
+            transform: translate(200px, -200px) scale(0.3);
+        }
+
+        to {
+            opacity: 1;
+            transform: translate(0, 0) scale(1);
+        }
+    }
+}
+
+/* Mobile (max 809px) */
+@media (max-width: 809.98px) {
+    .hero-section {
+        padding: 100px 1.5rem 60px;
+        min-height: auto;
+    }
+
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+    .hero-title-line {
+        font-size: 40px;
+        letter-spacing: -0.01em;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+    }
+
+    .hero-cta-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .hero-cta-primary,
+    .hero-cta-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .hero-image-carousel {
+        height: 350px;
+        /* Simpler animation for mobile */
+        transform: translateY(50px) scale(0.9);
+    }
+
+    @keyframes featureZoomIn {
+        from {
+            opacity: 0;
+            transform: translateY(50px) scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .hero-title-line {
+        font-size: 32px;
+    }
+
+    .hero-section {
+        padding: 80px 1rem 40px;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-text-wrapper,
+    .hero-title-container,
+    .hero-subtitle,
+    .hero-cta-container,
+    .hero-feature-card {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .hero-cta-primary:hover,
+    .hero-cta-secondary:hover {
+        transform: none;
+    }
+}
+
+/* Focus styles for accessibility */
+.hero-cta-primary:focus-visible,
+.hero-cta-secondary:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+}

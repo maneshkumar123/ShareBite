@@ -1,0 +1,31 @@
+.card {
+    background: white;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.card-shadow {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-clickable {
+    cursor: pointer;
+}
+
+/* Padding variants */
+.card-small {
+    padding: 1rem;
+}
+
+.card-medium {
+    padding: 1.5rem;
+}
+
+.card-large {
+    padding: 2rem;
+}

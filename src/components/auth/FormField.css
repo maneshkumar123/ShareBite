@@ -1,0 +1,116 @@
+/* ==============================================
+   FORM FIELD COMPONENT
+   Dark theme styling matching Homepage aesthetics
+   Inter font family, consistent colors
+   ============================================== */
+
+/* Import Inter font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+/* Label - Matches Hero subtitle style */
+.form-field-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+
+.form-field-required {
+    color: #7DFF12;
+    /* Lime green accent */
+    margin-left: 2px;
+    font-weight: 400;
+}
+
+/* Input - Clean, minimal styling */
+.form-field-input {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    color: #F7F7F7;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+    box-sizing: border-box;
+}
+
+.form-field-input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: 400;
+}
+
+/* Focus state - Lime green accent like Hero CTA */
+.form-field-input:focus {
+    border-color: rgba(125, 255, 18, 0.5);
+    background-color: rgba(125, 255, 18, 0.02);
+    box-shadow: 0 0 0 3px rgba(125, 255, 18, 0.06);
+}
+
+.form-field-input:hover:not(:focus):not(.disabled) {
+    border-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Error state */
+.form-field-input.has-error {
+    border-color: rgba(239, 68, 68, 0.5);
+    background-color: rgba(239, 68, 68, 0.03);
+}
+
+.form-field-input.has-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.08);
+}
+
+.form-field-input.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Select dropdown - Matching dark theme */
+.form-field-input option {
+    background-color: #1a1a1a;
+    color: #F7F7F7;
+    padding: 12px;
+}
+
+/* Textarea specific */
+textarea.form-field-input {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Error message - Subtle styling */
+.form-field-error {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: #EF4444;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .form-field-input {
+        transition: none;
+    }
+}

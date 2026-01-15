@@ -1,0 +1,523 @@
+/* ==============================================
+   HOW IT WORKS SECTION
+   Creative Apes "Featured Projects" Style
+   Premium Scroll Animations with Lerp Smoothing
+   ============================================== */
+
+/* Import Inter Display font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   SECTION CONTAINER
+   ============================================== */
+
+.how-it-works-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    padding: 0 0 100px;
+    background-color: rgb(217, 217, 217);
+    /* Light gray - contrast with dark hero */
+    overflow: hidden;
+    /* Clips scrolling headline */
+}
+
+/* ==============================================
+   SECTION DIVIDER LINES
+   Professional separator lines like Creative Apes
+   ============================================== */
+
+.section-divider-line {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(13, 13, 13, 0.15);
+    flex-shrink: 0;
+}
+
+/* ==============================================
+   INFINITE MARQUEE HEADLINE - "how it works©"
+   Continuous ticker animation - enters and exits
+   ============================================== */
+
+/* Keyframe for infinite marquee scroll */
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.headline-wrapper {
+    width: 100%;
+    height: 240px;
+    /* Increased to fit 140px font fully */
+    overflow: hidden;
+    /* Critical - clips the marquee */
+    position: relative;
+    padding-top: 60px;
+    /* Reduced padding for better centering */
+    pointer-events: none;
+    background: transparent;
+}
+
+.marquee-track {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: max-content;
+
+    /* The magic - infinite smooth animation */
+    animation: marqueeScroll 25s linear infinite;
+
+    /* GPU acceleration for butter-smooth 60fps */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+}
+
+/* Pause on hover for better UX */
+.headline-wrapper:hover .marquee-track {
+    animation-play-state: paused;
+}
+
+.marquee-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 0;
+}
+
+.headline-text {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 140px;
+    font-weight: 400;
+    color: rgb(13, 13, 13);
+    line-height: 1;
+    margin: 0;
+    padding: 0 40px;
+    white-space: nowrap;
+    letter-spacing: -0.03em;
+    user-select: none;
+    flex-shrink: 0;
+
+    /* Text rendering optimization */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+/* Diamond separator between texts */
+.marquee-separator {
+    font-size: 40px;
+    color: rgba(13, 13, 13, 0.3);
+    padding: 0 20px;
+    flex-shrink: 0;
+}
+
+/* ==============================================
+   SECTION HEADER - Three Part Layout
+   ============================================== */
+
+.how-it-works-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 22px 25px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.header-left {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgb(13, 13, 13);
+    margin: 0;
+    padding: 0;
+    letter-spacing: 0.02em;
+}
+
+.header-middle {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.05em;
+}
+
+.header-right {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: rgb(13, 13, 13);
+    letter-spacing: 0.02em;
+}
+
+/* ==============================================
+   STEPS CONTAINER
+   ============================================== */
+
+.steps-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+    padding: 40px 0;
+    background-color: transparent;
+}
+
+/* ==============================================
+   INDIVIDUAL STEP CARD
+   Smooth scroll-progress animations via JS
+   ============================================== */
+
+.step-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 45px 22px 22px;
+    margin: 0;
+    background-color: rgb(217, 217, 217);
+    border-radius: 0;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    box-sizing: border-box;
+
+    /* GPU acceleration for buttery smooth lerp animations */
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+
+    /* Transform origin for natural scaling */
+    transform-origin: center center;
+}
+
+/* Hover effect - elegant shadow only */
+.step-card:hover {
+    box-shadow:
+        rgba(0, 0, 0, 0.04) 0 4px 12px,
+        rgba(0, 0, 0, 0.08) 0 16px 48px;
+}
+
+/* ==============================================
+   CARD HEADER (Title + Description + CTA)
+   ============================================== */
+
+.step-card-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.step-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 10px;
+}
+
+/* Step Number Badge - More refined */
+.step-number {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(13, 13, 13, 0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+}
+
+/* Step Title - Larger, more impactful */
+.step-title {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 44px;
+    font-weight: 400;
+    color: rgb(13, 13, 13);
+    line-height: 1.1;
+    margin: 0;
+    padding: 0;
+    letter-spacing: -0.02em;
+}
+
+/* Step Description - Refined */
+.step-description {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(13, 13, 13, 0.7);
+    line-height: 1.5;
+    margin: 0;
+    padding: 0;
+    max-width: 550px;
+}
+
+/* ==============================================
+   CTA BUTTON - More refined interaction
+   ============================================== */
+
+.step-cta-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    padding: 0;
+    margin-top: 8px;
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    color: rgba(13, 13, 13, 0.4);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-cta-button:hover {
+    background-color: #7DFF12;
+    color: rgb(13, 13, 13);
+    transform: scale(1.15);
+    box-shadow: 0 4px 20px rgba(125, 255, 18, 0.3);
+}
+
+.step-cta-button svg {
+    width: 50px;
+    height: 50px;
+    transition: inherit;
+}
+
+/* ==============================================
+   STEP IMAGE - With parallax support
+   ============================================== */
+
+.step-image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 380px;
+    background-color: transparent;
+    overflow: hidden;
+    /* Critical for parallax effect */
+    border-radius: 16px;
+}
+
+.step-image {
+    width: 100%;
+    height: 120%;
+    /* Extra height for parallax movement */
+    display: block;
+    object-fit: cover;
+    object-position: 50% 50%;
+    margin: 0;
+    padding: 0;
+
+    /* GPU acceleration for parallax */
+    will-change: transform;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+
+    /* Smooth hover transition */
+    transition: filter 0.5s ease;
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+.step-card:hover .step-image {
+    filter: brightness(1.03) contrast(1.02);
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+/* Tablet (810px - 1199px) */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+    .headline-wrapper {
+        height: 160px;
+        padding-top: 60px;
+    }
+
+    .headline-text {
+        font-size: 100px;
+        line-height: 100px;
+    }
+
+    .marquee-track {
+        animation-duration: 20s;
+    }
+
+    .marquee-separator {
+        font-size: 32px;
+    }
+
+    .how-it-works-header {
+        padding: 40px 20px 20px;
+    }
+
+    .step-card {
+        padding: 35px 20px 20px;
+    }
+
+    .step-title {
+        font-size: 36px;
+    }
+
+    .step-description {
+        font-size: 16px;
+    }
+
+    .step-image-container {
+        height: 300px;
+        border-radius: 12px;
+    }
+}
+
+/* Mobile (max 809px) */
+@media (max-width: 809.98px) {
+    .how-it-works-section {
+        padding: 0 0 60px;
+    }
+
+    .headline-wrapper {
+        height: 100px;
+        padding-top: 40px;
+    }
+
+    .headline-text {
+        font-size: 56px;
+        line-height: 56px;
+    }
+
+    .marquee-track {
+        animation-duration: 18s;
+    }
+
+    .marquee-separator {
+        font-size: 24px;
+        padding: 0 12px;
+    }
+
+    .how-it-works-header {
+        padding: 30px 16px 16px;
+    }
+
+    .header-left,
+    .header-right {
+        font-size: 13px;
+    }
+
+    .header-middle {
+        display: none;
+    }
+
+    .steps-container {
+        gap: 16px;
+        padding: 24px 0;
+    }
+
+    .step-card {
+        padding: 24px 16px 16px;
+    }
+
+    .step-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .step-title {
+        font-size: 28px;
+    }
+
+    .step-description {
+        font-size: 15px;
+        max-width: 100%;
+    }
+
+    .step-cta-button {
+        width: 42px;
+        height: 42px;
+    }
+
+    .step-cta-button svg {
+        width: 42px;
+        height: 42px;
+    }
+
+    .step-image-container {
+        height: 220px;
+        border-radius: 10px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .headline-text {
+        font-size: 40px;
+        line-height: 40px;
+    }
+
+    .headline-wrapper {
+        height: 70px;
+        padding-top: 30px;
+    }
+
+    .step-title {
+        font-size: 24px;
+    }
+
+    .step-image-container {
+        height: 180px;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
+
+    .step-card {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .step-image {
+        transform: none !important;
+    }
+
+    .step-cta-button:hover {
+        transform: none;
+    }
+}
+
+/* Focus styles for accessibility */
+.step-card:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+}
+
+.step-cta-button:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+    background-color: rgba(125, 255, 18, 0.2);
+}

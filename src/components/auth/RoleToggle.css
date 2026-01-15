@@ -1,0 +1,136 @@
+/* ==============================================
+   ROLE TOGGLE COMPONENT
+   Clean, minimal Donor/Recipient selector
+   Matching Homepage Typography & Style
+   ============================================== */
+
+/* Import Inter font for consistency */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.role-toggle {
+    width: 100%;
+    margin-bottom: 1.25rem;
+}
+
+.role-toggle-track {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    padding: 4px;
+    gap: 4px;
+}
+
+/* Sliding indicator - lime green accent like Hero CTA */
+.role-toggle-indicator {
+    position: absolute;
+    top: 4px;
+    width: calc(50% - 4px);
+    height: calc(100% - 8px);
+    background: linear-gradient(135deg,
+            rgba(125, 255, 18, 0.1) 0%,
+            rgba(125, 255, 18, 0.05) 100%);
+    border: 1px solid rgba(125, 255, 18, 0.2);
+    border-radius: 9px;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+    will-change: transform;
+}
+
+.role-toggle-indicator.left {
+    transform: translateX(0);
+    left: 4px;
+}
+
+.role-toggle-indicator.right {
+    transform: translateX(calc(100% + 4px));
+    left: 4px;
+}
+
+/* Role option button - Clean, text-only */
+.role-toggle-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 14px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    transition: opacity 0.2s ease;
+}
+
+.role-toggle-option:hover:not(.active):not(:disabled) {
+    opacity: 0.75;
+}
+
+.role-toggle-option:focus-visible {
+    outline: 2px solid #7DFF12;
+    outline-offset: 2px;
+}
+
+/* Label - Matches Hero title typography */
+.role-toggle-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.25s ease;
+}
+
+.role-toggle-option.active .role-toggle-label {
+    color: #7DFF12;
+    /* Lime green accent */
+}
+
+/* Subtitle - Matches Hero subtitle typography */
+.role-toggle-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.2);
+    transition: color 0.25s ease;
+}
+
+.role-toggle-option.active .role-toggle-subtitle {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Disabled state */
+.role-toggle.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .role-toggle-option {
+        padding: 12px 8px;
+    }
+
+    .role-toggle-label {
+        font-size: 14px;
+    }
+
+    .role-toggle-subtitle {
+        font-size: 10px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .role-toggle-indicator,
+    .role-toggle-option,
+    .role-toggle-label,
+    .role-toggle-subtitle {
+        transition: none;
+    }
+}

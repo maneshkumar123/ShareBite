@@ -1,0 +1,454 @@
+/* ==============================================
+   PREMIUM NAVBAR - Creative Apes Animation System
+   76px height, spring animations, rolling text
+   ============================================== */
+
+/* Import Inter Display font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   ANIMATION KEYFRAMES
+   ============================================== */
+
+/* Navbar slides down from -79px with 4s original delay (reduced for UX) */
+@keyframes navbarSlideDown {
+    from {
+        opacity: 0.001;
+        transform: translateY(-79px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo subtle fade in - Professional and clean */
+@keyframes logoFadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Nav links fade in with slight bounce */
+@keyframes navLinksFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    70% {
+        opacity: 1;
+        transform: translateY(3px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* CTA button bounces in */
+@keyframes ctaBounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3) translateY(-20px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.05) translateY(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ==============================================
+   FIXED HEADER CONTAINER
+   ============================================== */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 76px;
+    background-color: #121212;
+    /* Dark charcoal */
+    border-bottom: none;
+    box-shadow: none;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Animation: Slides down from -79px */
+    opacity: 0;
+    transform: translateY(-79px);
+    animation: navbarSlideDown 1s cubic-bezier(0.44, 0, 0.56, 1) forwards;
+    animation-delay: 0.2s;
+    /* Reduced from 4s for better UX */
+}
+
+/* ==============================================
+   MAIN NAVIGATION CONTAINER
+   ============================================== */
+
+.nav {
+    display: flex;
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+    height: 75px;
+    padding: 0 24px;
+    /* 24px horizontal padding */
+    align-items: center;
+    justify-content: space-between;
+    background-color: transparent;
+}
+
+/* ==============================================
+   LOGO SECTION (LEFT)
+   ============================================== */
+
+.logo-link {
+    display: flex;
+    position: relative;
+    width: auto;
+    min-width: 121px;
+    height: 75px;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+    /* Animation: Subtle fade in - Professional */
+    opacity: 0;
+    animation: logoFadeIn 1.2s ease-out forwards;
+    animation-delay: 0.3s;
+    /* Small delay for elegance */
+}
+
+.logo-container {
+    display: block;
+    width: auto;
+    height: 40px;
+}
+
+.logo-text {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #F7F7F7;
+    /* Off-white */
+    margin: 0;
+    padding: 0;
+    letter-spacing: -0.02em;
+}
+
+/* ==============================================
+   NAVIGATION LINKS (CENTER)
+   ============================================== */
+
+.nav-links-container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    /* Balanced spacing */
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    /* Animation: Fade in with stagger */
+    opacity: 0;
+    animation: navLinksFadeIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.5s;
+}
+
+.nav-link {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+/* Rolling Text Effect Container */
+.rolling-text {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    height: 20px;
+    overflow: hidden;
+    /* Clips text for rolling effect */
+    user-select: none;
+    /* Prevents text selection */
+}
+
+.rolling-text-main,
+.rolling-text-shadow {
+    font-family: 'Inter Display', 'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 20px;
+    white-space: nowrap;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rolling-text-main {
+    color: #9E9EFF;
+    /* Soft blue-purple */
+    position: relative;
+    z-index: 2;
+}
+
+.rolling-text-shadow {
+    color: #7DFF12;
+    /* Lime green for reveal */
+    position: absolute;
+    top: 20px;
+    /* Positioned 20px below main text */
+    left: 0;
+    z-index: 1;
+}
+
+/* Hover Effect - Rolls text up */
+.nav-link:hover .rolling-text-main {
+    transform: translateY(-20px);
+}
+
+.nav-link:hover .rolling-text-shadow {
+    transform: translateY(-20px);
+}
+
+/* Active Link State */
+.nav-link.active .rolling-text-main {
+    color: #7DFF12;
+    /* Lime green for active */
+    font-weight: 500;
+}
+
+/* ==============================================
+   NAVIGATION ACTIONS (RIGHT)
+   ============================================== */
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+
+    /* Animation */
+    opacity: 0;
+    animation: ctaBounceIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: 0.7s;
+}
+
+/* Text-based nav buttons */
+.nav-btn-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: #F7F7F7;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.nav-btn-text:hover {
+    color: #9E9EFF;
+    /* Soft blue on hover */
+}
+
+/* Primary CTA Button */
+.nav-btn-primary {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #121212;
+    /* Dark text */
+    background: #7DFF12;
+    /* Lime green */
+    padding: 0.5rem 1.5rem;
+    border-radius: 12px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-btn-primary:hover {
+    background: #6eeb00;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(125, 255, 18, 0.4);
+}
+
+/* Theme Toggle Button (Pill-shaped) */
+.theme-toggle-btn {
+    display: inline-flex;
+    position: relative;
+    width: 56px;
+    height: 31px;
+    padding: 0;
+    margin: 0;
+    background-color: #7DFF12;
+    /* Lime green */
+    border: none;
+    border-radius: 15.5px;
+    /* Half of height = pill shape */
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: background 0.2s ease;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle-btn:hover {
+    background: #6eeb00;
+    box-shadow: 0 4px 12px rgba(125, 255, 18, 0.3);
+}
+
+.theme-toggle-btn:active {
+    transform: scale(0.98);
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+/* Tablet (810px - 1199px) */
+@media (min-width: 810px) and (max-width: 1199.98px) {
+    .nav-links-container {
+        gap: 30px;
+    }
+
+    .nav {
+        padding: 0 20px;
+    }
+
+    .rolling-text-main,
+    .rolling-text-shadow {
+        font-size: 16px;
+    }
+}
+
+/* Mobile (max 809px) */
+@media (max-width: 809.98px) {
+    .header {
+        height: 70px;
+    }
+
+    .nav {
+        padding: 0 1rem;
+    }
+
+    .logo-text {
+        font-size: 20px;
+    }
+
+    /* Hide center nav links on mobile */
+    .nav-links-container {
+        display: none;
+    }
+
+    .nav-actions {
+        gap: 1rem;
+    }
+
+    .nav-btn-text,
+    .nav-btn-primary {
+        font-size: 14px;
+        padding: 0.4rem 1rem;
+    }
+
+    .theme-toggle-btn {
+        width: 48px;
+        height: 28px;
+        border-radius: 14px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+    .nav-btn-text {
+        display: none;
+        /* Hide text buttons, keep only primary CTA */
+    }
+
+    .nav-actions {
+        gap: 0.75rem;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY
+   ============================================== */
+
+/* Focus styles for keyboard navigation */
+.nav-link:focus-visible,
+.nav-btn-text:focus-visible,
+.nav-btn-primary:focus-visible,
+.theme-toggle-btn:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+
+    .header,
+    .logo-link,
+    .nav-links-container,
+    .nav-actions,
+    .rolling-text-main,
+    .rolling-text-shadow,
+    .nav-link,
+    .nav-btn-primary,
+    .nav-btn-text,
+    .theme-toggle-btn {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+    }
+
+    .nav-link:hover .rolling-text-main,
+    .nav-link:hover .rolling-text-shadow {
+        transform: none;
+    }
+}
+
+/* ==============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================== */
+
+.header,
+.logo-link,
+.nav-link,
+.rolling-text-main,
+.rolling-text-shadow {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}

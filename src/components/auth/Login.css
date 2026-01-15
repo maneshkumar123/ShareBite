@@ -1,0 +1,663 @@
+/* ==============================================
+   LOGIN PAGE - MODERN AUTH DESIGN
+   Matching Register Page & Homepage Aesthetics
+   ============================================== */
+
+/* Import Inter font for consistency with homepage */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   ANIMATION KEYFRAMES
+   ============================================== */
+
+@keyframes headingBounceUp {
+    0% {
+        opacity: 0;
+        transform: translateY(45px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(-8px);
+    }
+
+    80% {
+        transform: translateY(3px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes subtitleFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(60px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% center;
+    }
+
+    50% {
+        background-position: 100% center;
+    }
+
+    100% {
+        background-position: 0% center;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fieldFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==============================================
+   PAGE CONTAINER
+   ============================================== */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #121212;
+    padding: clamp(80px, 10vh, 120px) clamp(16px, 4vw, 48px) clamp(40px, 6vh, 80px);
+    box-sizing: border-box;
+}
+
+.login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 4vw, 5rem);
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
+}
+
+/* ==============================================
+   LEFT SIDE - Animated Title
+   ============================================== */
+
+.login-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: clamp(0px, 2vw, 30px);
+}
+
+.login-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.login-title-container {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(45px);
+}
+
+.login-text-wrapper.visible .login-title-container {
+    animation: headingBounceUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.login-text-wrapper.visible .login-title-container:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.login-text-wrapper.visible .login-title-container:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.login-text-wrapper.visible .login-title-container:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.login-title-line {
+    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 500;
+    color: #F7F7F7;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin: 0;
+    padding: 0;
+}
+
+/* Rotating text container */
+.rotating-container {
+    overflow: visible !important;
+    height: clamp(45px, 6vw, 70px);
+}
+
+.rotating-text-wrapper {
+    position: relative;
+    height: clamp(45px, 6vw, 70px);
+    width: 100%;
+    overflow: hidden;
+}
+
+.rotating-phrase {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+
+.rotating-phrase.active {
+    opacity: 1;
+    transform: translateY(0);
+    background: linear-gradient(90deg, #7DFF12 0%, #A3FF33 50%, #7DFF12 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+}
+
+.rotating-phrase.exiting {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.login-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(13px, 1vw, 16px);
+    font-weight: 400;
+    color: #777777;
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 1.25rem 0 0;
+    opacity: 0;
+}
+
+.login-text-wrapper.visible .login-subtitle {
+    animation: subtitleFadeIn 0.8s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+/* ==============================================
+   RIGHT SIDE - Form Card
+   ============================================== */
+
+.login-right {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(60px);
+}
+
+.login-right.visible {
+    animation: cardSlideIn 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 420px;
+    background: linear-gradient(145deg,
+            rgba(255, 255, 255, 0.035) 0%,
+            rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 24px;
+    padding: clamp(28px, 3.5vw, 36px);
+    box-sizing: border-box;
+    backdrop-filter: blur(24px);
+    box-shadow:
+        0 12px 48px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.login-card-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.login-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(22px, 2vw, 26px);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #F7F7F7;
+    margin: 0 0 0.3rem;
+}
+
+.login-card-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666666;
+    margin: 0;
+}
+
+/* ==============================================
+   FORM
+   ============================================== */
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.login-form-fields .form-field {
+    animation: fieldFadeIn 0.35s ease-out forwards;
+    opacity: 0;
+}
+
+.login-form-fields .form-field:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.login-form-fields .form-field:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+/* ==============================================
+   OPTIONS ROW (Remember Me & Forgot Password)
+   ============================================== */
+
+.login-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+}
+
+/* Custom Checkbox */
+.login-remember {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.login-remember input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.login-remember-checkmark {
+    width: 16px;
+    height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.login-remember input:checked+.login-remember-checkmark {
+    background: #7DFF12;
+    border-color: #7DFF12;
+}
+
+.login-remember input:checked+.login-remember-checkmark::after {
+    content: '';
+    width: 4px;
+    height: 8px;
+    border: solid #121212;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-bottom: 2px;
+}
+
+.login-remember:hover .login-remember-checkmark {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.login-remember-text {
+    user-select: none;
+}
+
+.login-forgot {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #7DFF12;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.login-forgot:hover {
+    opacity: 0.8;
+}
+
+/* ==============================================
+   SUBMIT BUTTON
+   ============================================== */
+
+.login-submit-btn {
+    width: 100%;
+    padding: clamp(13px, 1.3vw, 15px) 24px;
+    background: linear-gradient(135deg, #7DFF12 0%, #6eeb00 100%);
+    color: #121212;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.25),
+            transparent);
+    transition: left 0.5s ease;
+}
+
+.login-submit-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.login-submit-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(125, 255, 18, 0.4);
+}
+
+.login-submit-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.login-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.login-submit-btn:focus-visible {
+    outline: 3px solid #7DFF12;
+    outline-offset: 4px;
+}
+
+/* Spinner */
+.spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(18, 18, 18, 0.3);
+    border-top-color: #121212;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Error message */
+.login-error {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: #EF4444;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+/* ==============================================
+   DIVIDER
+   ============================================== */
+
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 1.25rem 0;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.login-divider span {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* ==============================================
+   SOCIAL LOGIN BUTTONS
+   ============================================== */
+
+.login-social {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1rem;
+}
+
+.login-social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.login-social-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.login-social-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.login-social-btn svg {
+    opacity: 0.8;
+}
+
+/* ==============================================
+   REGISTER LINK
+   ============================================== */
+
+.login-register-link {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: #777777;
+    margin: 0;
+}
+
+.login-register-link a {
+    color: #7DFF12;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+}
+
+.login-register-link a:hover {
+    opacity: 0.8;
+    text-decoration: underline;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN
+   ============================================== */
+
+/* Tablet */
+@media (max-width: 900px) {
+    .login-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        max-width: 440px;
+    }
+
+    .login-left {
+        text-align: center;
+        padding-right: 0;
+    }
+
+    .login-subtitle {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .login-title-line {
+        justify-content: center;
+    }
+
+    .rotating-phrase {
+        justify-content: center;
+    }
+
+    .login-right {
+        justify-content: center;
+    }
+
+    .login-card {
+        max-width: 100%;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    .login-page {
+        padding: 80px 16px 40px;
+    }
+
+    .login-card {
+        padding: 24px 20px;
+        border-radius: 20px;
+    }
+
+    .login-social {
+        grid-template-columns: 1fr;
+    }
+
+    .login-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+    .login-page {
+        padding: 70px 12px 30px;
+    }
+
+    .login-card {
+        padding: 20px 16px;
+        border-radius: 16px;
+    }
+}
+
+/* ==============================================
+   ACCESSIBILITY
+   ============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .login-title-container,
+    .login-subtitle,
+    .login-right,
+    .rotating-phrase,
+    .login-form-fields .form-field {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .login-submit-btn:hover,
+    .login-submit-btn::before {
+        transform: none;
+    }
+
+    .spinner {
+        animation: none;
+    }
+}

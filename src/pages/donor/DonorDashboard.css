@@ -1,0 +1,124 @@
+/**
+ * Donor Dashboard Page Styles
+ */
+
+.donor-dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+}
+
+/* ==========================================
+   WELCOME SECTION
+   ========================================== */
+
+.donor-dashboard__welcome {
+    margin-bottom: var(--spacing-sm);
+}
+
+.donor-dashboard__greeting {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-xs);
+}
+
+.donor-dashboard__subtitle {
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+/* ==========================================
+   STATS GRID
+   ========================================== */
+
+.donor-dashboard__stats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+}
+
+/* ==========================================
+   QUICK ACTIONS
+   ========================================== */
+
+.donor-dashboard__actions-card {
+    margin-top: var(--spacing-sm);
+}
+
+.donor-dashboard__actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.donor-dashboard__actions a {
+    text-decoration: none;
+}
+
+/* ==========================================
+   EMPTY STATE
+   ========================================== */
+
+.donor-dashboard__empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-md);
+}
+
+.donor-dashboard__empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.donor-dashboard__empty-state h4 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-sm);
+}
+
+.donor-dashboard__empty-state p {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--spacing-lg);
+    max-width: 300px;
+}
+
+/* ==========================================
+   RESPONSIVE - Tablet (768px+)
+   ========================================== */
+
+@media (min-width: 768px) {
+    .donor-dashboard__stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .donor-dashboard__actions {
+        flex-direction: row;
+    }
+
+    .donor-dashboard__actions a {
+        flex: 1;
+    }
+
+    .donor-dashboard__greeting {
+        font-size: var(--font-size-3xl);
+    }
+}
+
+/* ==========================================
+   RESPONSIVE - Desktop (1024px+)
+   ========================================== */
+
+@media (min-width: 1024px) {
+    .donor-dashboard__stats {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}

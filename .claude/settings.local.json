@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"D:\\\\ShareBiteNew\\\\src\\\\components\"\" && echo \"---\" && ls -la \"D:ShareBiteNewsrccomponentscommon\"\")",
+      "Bash(ls -la \"D:\\\\ShareBiteNew\\\\src\\\\components\\\\auth\"\" && echo \"---\" && ls -la \"D:ShareBiteNewsrccomponentslayout\"\" \")",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:leafletjs.com)",
+      "WebFetch(domain:wiki.openstreetmap.org)"
+    ]
+  }
+}
