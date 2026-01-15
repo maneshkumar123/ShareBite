@@ -47,7 +47,7 @@ export const geolocationService = {
     },
 
     // Geocode address to coordinates (placeholder)
-    geocodeAddress: async (address: string): Promise<ApiResponse<Location>> => {
+    geocodeAddress: async (_address: string): Promise<ApiResponse<Location>> => {
         return apiRequest(async () => {
             // TODO: Implement geocoding with Google Maps API or similar
             throw new Error('Geocoding not implemented yet');

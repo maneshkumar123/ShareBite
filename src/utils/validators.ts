@@ -19,7 +19,6 @@ export const isValidPhone = (phone: string): boolean => {
 
 // Form field validation
 export const validateField = (
-    name: string,
     value: string,
     type?: 'email' | 'password' | 'phone'
 ): string | null => {

@@ -1,9 +1,11 @@
 // User and Authentication Types
-export enum UserRole {
-    DONOR = 'donor',
-    RECIPIENT = 'recipient',
-    CHARITY = 'charity',
-}
+export const UserRole = {
+    DONOR: 'donor',
+    RECIPIENT: 'recipient',
+    CHARITY: 'charity',
+} as const;
+
+export type UserRole = typeof UserRole[keyof typeof UserRole];
 
 export interface User {
     id: string;
@@ -37,11 +39,13 @@ export interface Location {
 }
 
 // Food Listing Types
-export enum ListingStatus {
-    AVAILABLE = 'available',
-    CLAIMED = 'claimed',
-    EXPIRED = 'expired',
-}
+export const ListingStatus = {
+    AVAILABLE: 'available',
+    CLAIMED: 'claimed',
+    EXPIRED: 'expired',
+} as const;
+
+export type ListingStatus = typeof ListingStatus[keyof typeof ListingStatus];
 
 export interface FoodListing {
     id: string;

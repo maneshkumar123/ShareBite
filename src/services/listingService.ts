@@ -1,4 +1,4 @@
-import { supabase, apiRequest } from './api';
+import { apiRequest } from './api';
 import type {
     FoodListing,
     Location,
@@ -19,7 +19,7 @@ export interface CreateListingData {
 // Food listing service (placeholder for Supabase integration)
 export const listingService = {
     // Create new listing
-    create: async (listingData: CreateListingData): Promise<ApiResponse<FoodListing>> => {
+    create: async (_listingData: CreateListingData): Promise<ApiResponse<FoodListing>> => {
         return apiRequest(async () => {
             // TODO: Implement Supabase insert
             // const { data, error } = await supabase.from('listings').insert([listingData]);
@@ -29,8 +29,8 @@ export const listingService = {
 
     // Get all listings
     getAll: async (
-        page: number = 1,
-        pageSize: number = 20
+        _page: number = 1,
+        _pageSize: number = 20
     ): Promise<ApiResponse<PaginatedResponse<FoodListing>>> => {
         return apiRequest(async () => {
             // TODO: Implement Supabase query with pagination
@@ -40,8 +40,8 @@ export const listingService = {
 
     // Get nearby listings
     getNearby: async (
-        userLocation: Location,
-        radiusKm: number = 10
+        _userLocation: Location,
+        _radiusKm: number = 10
     ): Promise<ApiResponse<FoodListing[]>> => {
         return apiRequest(async () => {
             // TODO: Implement geolocation-based query
@@ -50,7 +50,7 @@ export const listingService = {
     },
 
     // Get listing by ID
-    getById: async (id: string): Promise<ApiResponse<FoodListing>> => {
+    getById: async (_id: string): Promise<ApiResponse<FoodListing>> => {
         return apiRequest(async () => {
             // TODO: Implement Supabase query
             throw new Error('Not implemented - will be connected to Supabase');
@@ -58,7 +58,7 @@ export const listingService = {
     },
 
     // Claim listing
-    claim: async (listingId: string): Promise<ApiResponse<FoodListing>> => {
+    claim: async (_listingId: string): Promise<ApiResponse<FoodListing>> => {
         return apiRequest(async () => {
             // TODO: Implement Supabase update
             throw new Error('Not implemented - will be connected to Supabase');
@@ -67,8 +67,8 @@ export const listingService = {
 
     // Update listing status
     updateStatus: async (
-        listingId: string,
-        status: ListingStatus
+        _listingId: string,
+        _status: ListingStatus
     ): Promise<ApiResponse<FoodListing>> => {
         return apiRequest(async () => {
             // TODO: Implement Supabase update
