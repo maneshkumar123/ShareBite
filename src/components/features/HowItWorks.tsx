@@ -1,4 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import stepListSurplus from '@assets/step_list_surplus.png';
+import stepMatching from '@assets/step_matching.png';
+import stepPickup from '@assets/step_pickup.png';
 import './HowItWorks.css';
 
 // Step data for ShareBite
@@ -7,21 +10,21 @@ const STEPS = [
         number: '01',
         title: 'List Your Surplus',
         description: 'Restaurants and cafés post available food with photos, quantity, and pickup window',
-        image: '/src/assets/step_list_surplus.png',
+        image: stepListSurplus,
         alt: 'Restaurant listing surplus food on ShareBite platform',
     },
     {
         number: '02',
         title: 'Real-Time Matching',
         description: 'Geolocation connects nearby recipients with fresh, available food instantly',
-        image: '/src/assets/step_matching.png',
+        image: stepMatching,
         alt: 'Map showing real-time food matching with nearby recipients',
     },
     {
         number: '03',
         title: 'Easy Pickup',
         description: 'Recipients collect food before it expires, reducing waste and feeding communities',
-        image: '/src/assets/step_pickup.png',
+        image: stepPickup,
         alt: 'Person receiving food from restaurant donor',
     },
 ];

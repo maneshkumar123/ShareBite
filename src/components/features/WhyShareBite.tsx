@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
+import whyRealtime from '@assets/why_realtime.png';
+import whyGeolocation from '@assets/why_geolocation.png';
+import whyImpact from '@assets/why_impact.png';
+import whyAutomation from '@assets/why_automation.png';
 import './WhyShareBite.css';
 
 // ============================================
@@ -6,10 +10,10 @@ import './WhyShareBite.css';
 // ============================================
 
 const CAROUSEL_IMAGES = [
-    { src: '/src/assets/why_realtime.png', alt: 'Real-time coordination dashboard' },
-    { src: '/src/assets/why_geolocation.png', alt: 'Geolocation matching map' },
-    { src: '/src/assets/why_impact.png', alt: 'Social impact community' },
-    { src: '/src/assets/why_automation.png', alt: 'Automated expiry system' },
+    { src: whyRealtime, alt: 'Real-time coordination dashboard' },
+    { src: whyGeolocation, alt: 'Geolocation matching map' },
+    { src: whyImpact, alt: 'Social impact community' },
+    { src: whyAutomation, alt: 'Automated expiry system' },
 ];
 
 // ============================================
