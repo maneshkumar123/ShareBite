@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@utils/constants';
+import heroVideo from '@assets/heroVideo.mp4';
 import './Hero.css';
 
 // Rotating phrases for the last title line
@@ -136,7 +137,7 @@ export const Hero: React.FC = () => {
                             playsInline
                             className="hero-video"
                         >
-                            <source src="/src/assets/heroVideo.mp4" type="video/mp4" />
+                            <source src={heroVideo} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
                     </div>
