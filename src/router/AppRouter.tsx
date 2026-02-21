@@ -18,6 +18,9 @@ import ProfileSetup from '@pages/ProfileSetup';
 
 // Protected Pages - Donor
 import DonorDashboard from '@pages/donor/DonorDashboard';
+import CreateListing from '@pages/donor/CreateListing';
+import MyListings from '@pages/donor/MyListings';
+import DonorProfile from '@pages/donor/DonorProfile';
 
 // Protected Pages - Recipient
 import RecipientDashboard from '@pages/recipient/RecipientDashboard';
@@ -135,16 +138,16 @@ export const AppRouter: React.FC = () => {
                 {/* Donor Dashboard Routes - With Sidebar Layout */}
                 <Route element={<DonorDashboardLayout />}>
                     <Route path={ROUTES.DONOR_DASHBOARD} element={<DonorDashboard />} />
-                    <Route path={ROUTES.CREATE_LISTING} element={<CreateListingPlaceholder />} />
-                    <Route path="/donor/listings" element={<MyListingsPlaceholder />} />
-                    <Route path={ROUTES.PROFILE} element={<ProfilePlaceholder />} />
+                    <Route path={ROUTES.CREATE_LISTING} element={<CreateListing />} />
+                    <Route path="/donor/listings" element={<MyListings />} />
+                    <Route path={ROUTES.PROFILE} element={<DonorProfile />} />
                 </Route>
 
                 {/* Recipient Dashboard Routes - With Sidebar Layout */}
                 <Route element={<RecipientDashboardLayout />}>
                     <Route path={ROUTES.RECIPIENT_DASHBOARD} element={<RecipientDashboard />} />
                     <Route path={ROUTES.BROWSE_LISTINGS} element={<BrowseListingsPlaceholder />} />
-                    <Route path="/recipient/profile" element={<ProfilePlaceholder />} />
+                    <Route path="/recipient/profile" element={<RecipientProfilePlaceholder />} />
                 </Route>
 
                 {/* 404 Route */}
@@ -155,22 +158,8 @@ export const AppRouter: React.FC = () => {
 };
 
 // ==============================================
-// PLACEHOLDER COMPONENTS (to be replaced)
+// PLACEHOLDER COMPONENTS (recipient pages — pending)
 // ==============================================
-
-const CreateListingPlaceholder: React.FC = () => (
-    <div style={{ padding: '2rem', color: '#F7F7F7' }}>
-        <h2>Create Listing</h2>
-        <p style={{ color: '#888' }}>Coming soon...</p>
-    </div>
-);
-
-const MyListingsPlaceholder: React.FC = () => (
-    <div style={{ padding: '2rem', color: '#F7F7F7' }}>
-        <h2>My Listings</h2>
-        <p style={{ color: '#888' }}>Coming soon...</p>
-    </div>
-);
 
 const BrowseListingsPlaceholder: React.FC = () => (
     <div style={{ padding: '2rem', color: '#F7F7F7' }}>
@@ -179,7 +168,7 @@ const BrowseListingsPlaceholder: React.FC = () => (
     </div>
 );
 
-const ProfilePlaceholder: React.FC = () => (
+const RecipientProfilePlaceholder: React.FC = () => (
     <div style={{ padding: '2rem', color: '#F7F7F7' }}>
         <h2>Profile</h2>
         <p style={{ color: '#888' }}>Coming soon...</p>

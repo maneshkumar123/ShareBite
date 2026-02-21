@@ -1,0 +1,499 @@
+/* ── Page ───────────────────────────────────────────── */
+.dp-page {
+    padding: 2rem 2.5rem;
+    min-height: 100%;
+    background: #0D0D0D;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    font-family: 'Syne', sans-serif;
+    animation: dp-fade-in 0.4s ease both;
+}
+
+@keyframes dp-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ─────────────────────────────────────────── */
+.dp-header {
+    margin-bottom: 2rem;
+}
+
+.dp-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #F7F7F7;
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.02em;
+}
+
+.dp-header p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: rgba(247,247,247,0.5);
+    margin: 0;
+    letter-spacing: 0.03em;
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+.dp-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+/* ── Glass Card Base ────────────────────────────────── */
+.dp-avatar-card,
+.dp-details-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+}
+
+/* ── Avatar Card ────────────────────────────────────── */
+.dp-avatar-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+}
+
+.dp-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #7DFF12;
+    color: #0D0D0D;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+}
+
+.dp-avatar-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #F7F7F7;
+    margin: 0;
+}
+
+.dp-avatar-email {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: rgba(247,247,247,0.5);
+    margin: 0 0 0.75rem;
+    word-break: break-all;
+}
+
+.dp-role-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7DFF12;
+    border: 1px solid rgba(125,255,18,0.3);
+    border-radius: 999px;
+    padding: 0.2rem 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.dp-joined {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(247,247,247,0.35);
+    margin: 0 0 1rem;
+}
+
+.dp-stats-row {
+    width: 100%;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    margin-bottom: 1rem;
+}
+
+.dp-stats-row .dp-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.dp-stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #F7F7F7;
+}
+
+.dp-stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(247,247,247,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dp-signout-btn {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #ef4444;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.dp-signout-btn:hover {
+    background: rgba(239,68,68,0.08);
+    border-color: rgba(239,68,68,0.6);
+}
+
+/* ── Details Card ───────────────────────────────────── */
+.dp-details-card {
+    position: relative;
+}
+
+.dp-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.dp-details-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #F7F7F7;
+    margin: 0;
+}
+
+.dp-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 1rem;
+    background: rgba(125,255,18,0.08);
+    color: #7DFF12;
+    border: 1px solid rgba(125,255,18,0.2);
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.dp-edit-btn:hover {
+    background: rgba(125,255,18,0.15);
+    border-color: rgba(125,255,18,0.4);
+}
+
+/* ── View Grid ──────────────────────────────────────── */
+.dp-view-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.dp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.dp-field-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(247,247,247,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dp-field-value {
+    font-size: 0.95rem;
+    color: #F7F7F7;
+    font-weight: 500;
+}
+
+.dp-field-value.dp-muted {
+    color: rgba(247,247,247,0.35);
+    font-style: italic;
+}
+
+/* ── Badges ─────────────────────────────────────────── */
+.dp-badge {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    text-transform: capitalize;
+}
+
+.dp-badge--restaurant { background: rgba(239,68,68,0.12); color: #f87171; }
+.dp-badge--cafe       { background: rgba(168,85,247,0.12); color: #c084fc; }
+.dp-badge--bakery     { background: rgba(245,158,11,0.12); color: #fbbf24; }
+.dp-badge--grocery    { background: rgba(59,130,246,0.12); color: #60a5fa; }
+.dp-badge--catering   { background: rgba(16,185,129,0.12); color: #34d399; }
+.dp-badge--other      { background: rgba(255,255,255,0.06); color: rgba(247,247,247,0.5); }
+
+.dp-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+}
+
+.dp-verified-badge--yes {
+    background: rgba(125,255,18,0.1);
+    color: #7DFF12;
+}
+
+.dp-verified-badge--no {
+    background: rgba(255,255,255,0.05);
+    color: rgba(247,247,247,0.4);
+}
+
+/* ── Form ───────────────────────────────────────────── */
+.dp-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.dp-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.dp-form-group.dp-full-width {
+    grid-column: 1 / -1;
+}
+
+.dp-form-group label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(247,247,247,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.dp-form-group input,
+.dp-form-group select {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 0.65rem 0.85rem;
+    color: #F7F7F7;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.dp-form-group input:focus,
+.dp-form-group select:focus {
+    border-color: #7DFF12;
+}
+
+.dp-form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(247,247,247,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+}
+
+.dp-form-group select option {
+    background: #1a1a1a;
+    color: #F7F7F7;
+}
+
+.dp-address-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.dp-address-row input {
+    flex: 1;
+}
+
+.dp-geocode-btn {
+    padding: 0.65rem 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    color: #F7F7F7;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.dp-geocode-btn:hover {
+    border-color: #7DFF12;
+    background: rgba(125,255,18,0.05);
+}
+
+.dp-map-container {
+    margin-top: 0.75rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+
+.dp-form-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    grid-column: 1 / -1;
+}
+
+.dp-save-btn {
+    padding: 0.65rem 1.5rem;
+    background: #7DFF12;
+    color: #0D0D0D;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+}
+
+.dp-save-btn:hover:not(:disabled) {
+    background: #a3ff5c;
+    box-shadow: 0 0 20px rgba(125,255,18,0.4);
+}
+
+.dp-save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dp-cancel-btn {
+    padding: 0.65rem 1.5rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(247,247,247,0.6);
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.dp-cancel-btn:hover {
+    border-color: rgba(255,255,255,0.25);
+    color: #F7F7F7;
+}
+
+/* ── Error ──────────────────────────────────────────── */
+.dp-error {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.dp-error-msg {
+    font-size: 0.95rem;
+    color: #ef4444;
+    margin: 0 0 1.5rem;
+}
+
+.dp-retry-btn {
+    padding: 0.6rem 1.2rem;
+    background: rgba(239,68,68,0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.dp-retry-btn:hover {
+    background: rgba(239,68,68,0.18);
+}
+
+.dp-inline-error {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: #ef4444;
+    margin-top: 0.75rem;
+    grid-column: 1 / -1;
+}
+
+/* ── Skeleton Loading ───────────────────────────────── */
+.dp-skeleton-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+}
+
+.dp-skeleton-line {
+    height: 14px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+    background-size: 200% 100%;
+    border-radius: 6px;
+    animation: dp-shimmer 1.5s infinite;
+}
+
+.dp-skeleton-circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+    background-size: 200% 100%;
+    animation: dp-shimmer 1.5s infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes dp-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+    .dp-page {
+        padding: 1.5rem;
+    }
+
+    .dp-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dp-view-grid,
+    .dp-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dp-address-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
