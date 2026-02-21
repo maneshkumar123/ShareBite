@@ -1,0 +1,49 @@
+.recipient-dashboard {
+    padding: 2rem;
+    color: #F7F7F7;
+}
+
+.recipient-dashboard__header {
+    margin-bottom: 2rem;
+}
+
+.recipient-dashboard__header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 0.25rem;
+}
+
+.recipient-dashboard__subtitle {
+    color: #888;
+    margin: 0;
+}
+
+.recipient-dashboard__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.recipient-dashboard__empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.recipient-dashboard__empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.recipient-dashboard__empty h3 {
+    font-size: 1.125rem;
+    margin: 0 0 0.5rem;
+}
+
+.recipient-dashboard__empty p {
+    color: #888;
+    margin: 0;
+}

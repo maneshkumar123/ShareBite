@@ -9,11 +9,18 @@ import { DashboardLayout } from '@components/dashboard';
 import HomePage from '@pages/HomePage';
 import LoginPage from '@pages/auth/LoginPage';
 import RegisterPage from '@pages/auth/RegisterPage';
+import VerifyEmail from '@pages/auth/VerifyEmail';
 import AuthSuccess from '@pages/auth/AuthSuccess';
 import ForgotPassword from '@pages/auth/ForgotPassword';
 
+// Profile Setup (Auth Required, No Profile Required)
+import ProfileSetup from '@pages/ProfileSetup';
+
 // Protected Pages - Donor
 import DonorDashboard from '@pages/donor/DonorDashboard';
+
+// Protected Pages - Recipient
+import RecipientDashboard from '@pages/recipient/RecipientDashboard';
 
 // ==============================================
 // PROTECTED ROUTE WRAPPER
@@ -26,6 +33,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole }) => {
     const { isAuthenticated, user, isLoading } = useAuth();
+    const currentPath = window.location.pathname;
 
     // Check auth first - if not authenticated, redirect immediately
     // This prevents showing loading screen during logout
@@ -57,10 +65,18 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
         return <Navigate to={ROUTES.LOGIN} replace />;
     }
 
+    // Check if profile is complete (unless we're on the profile setup page)
+    if (user && !user.hasCompletedProfile && currentPath !== ROUTES.PROFILE_SETUP) {
+        return <Navigate to={ROUTES.PROFILE_SETUP} replace />;
+    }
+
     if (requiredRole && user?.role !== requiredRole) {
         // Redirect to appropriate dashboard
         if (user?.role === 'donor') {
             return <Navigate to={ROUTES.DONOR_DASHBOARD} replace />;
+        }
+        if (user?.role === 'recipient') {
+            return <Navigate to={ROUTES.RECIPIENT_DASHBOARD} replace />;
         }
         return <Navigate to={ROUTES.HOME} replace />;
     }
@@ -69,13 +85,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
 };
 
 // ==============================================
-// DONOR DASHBOARD LAYOUT WRAPPER
+// DASHBOARD LAYOUT WRAPPERS
 // ==============================================
 
 const DonorDashboardLayout: React.FC = () => {
     return (
         <ProtectedRoute requiredRole="donor">
             <DashboardLayout userRole="donor" />
+        </ProtectedRoute>
+    );
+};
+
+const RecipientDashboardLayout: React.FC = () => {
+    return (
+        <ProtectedRoute requiredRole="recipient">
+            <DashboardLayout userRole="recipient" />
         </ProtectedRoute>
     );
 };
@@ -93,9 +117,20 @@ export const AppRouter: React.FC = () => {
                     <Route path={ROUTES.HOME} element={<HomePage />} />
                     <Route path={ROUTES.LOGIN} element={<LoginPage />} />
                     <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+                    <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
                     <Route path={ROUTES.AUTH_SUCCESS} element={<AuthSuccess />} />
                     <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
                 </Route>
+
+                {/* Profile Setup - Auth Required, No Dashboard Layout */}
+                <Route
+                    path={ROUTES.PROFILE_SETUP}
+                    element={
+                        <ProtectedRoute>
+                            <ProfileSetup />
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* Donor Dashboard Routes - With Sidebar Layout */}
                 <Route element={<DonorDashboardLayout />}>
@@ -103,6 +138,13 @@ export const AppRouter: React.FC = () => {
                     <Route path={ROUTES.CREATE_LISTING} element={<CreateListingPlaceholder />} />
                     <Route path="/donor/listings" element={<MyListingsPlaceholder />} />
                     <Route path={ROUTES.PROFILE} element={<ProfilePlaceholder />} />
+                </Route>
+
+                {/* Recipient Dashboard Routes - With Sidebar Layout */}
+                <Route element={<RecipientDashboardLayout />}>
+                    <Route path={ROUTES.RECIPIENT_DASHBOARD} element={<RecipientDashboard />} />
+                    <Route path={ROUTES.BROWSE_LISTINGS} element={<BrowseListingsPlaceholder />} />
+                    <Route path="/recipient/profile" element={<ProfilePlaceholder />} />
                 </Route>
 
                 {/* 404 Route */}
@@ -126,6 +168,13 @@ const CreateListingPlaceholder: React.FC = () => (
 const MyListingsPlaceholder: React.FC = () => (
     <div style={{ padding: '2rem', color: '#F7F7F7' }}>
         <h2>My Listings</h2>
+        <p style={{ color: '#888' }}>Coming soon...</p>
+    </div>
+);
+
+const BrowseListingsPlaceholder: React.FC = () => (
+    <div style={{ padding: '2rem', color: '#F7F7F7' }}>
+        <h2>Browse Listings</h2>
         <p style={{ color: '#888' }}>Coming soon...</p>
     </div>
 );

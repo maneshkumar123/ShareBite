@@ -76,9 +76,45 @@ const DONOR_NAV_ITEMS: NavItem[] = [
     },
 ];
 
+// Recipient navigation items
+const RECIPIENT_NAV_ITEMS: NavItem[] = [
+    {
+        path: ROUTES.RECIPIENT_DASHBOARD,
+        label: 'Dashboard',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <rect x="14" y="3" width="7" height="7" rx="1" />
+                <rect x="3" y="14" width="7" height="7" rx="1" />
+                <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+        ),
+    },
+    {
+        path: ROUTES.BROWSE_LISTINGS,
+        label: 'Browse Food',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+        ),
+    },
+    {
+        path: '/recipient/profile',
+        label: 'Profile',
+        icon: (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+        ),
+    },
+];
+
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, userRole }) => {
     const location = useLocation();
-    const navItems = userRole === 'donor' ? DONOR_NAV_ITEMS : DONOR_NAV_ITEMS; // TODO: Add recipient items
+    const navItems = userRole === 'donor' ? DONOR_NAV_ITEMS : RECIPIENT_NAV_ITEMS;
 
     return (
         <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>

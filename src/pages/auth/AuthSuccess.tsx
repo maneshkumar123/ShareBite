@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { ROUTES } from '@utils/constants';
 import './AuthSuccess.css';
@@ -19,8 +19,20 @@ interface LocationState {
  */
 const AuthSuccess: React.FC = () => {
     const location = useLocation();
+    const navigate = useNavigate();
     const { user, logout } = useAuth();
     const state = location.state as LocationState | null;
+
+    // Redirect to profile setup if user is authenticated but hasn't completed profile
+    useEffect(() => {
+        if (user && !user.hasCompletedProfile) {
+            // Give them 2 seconds to see the success message, then redirect
+            const timer = setTimeout(() => {
+                navigate(ROUTES.PROFILE_SETUP);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [user, navigate]);
 
     const isFromLogin = state?.fromLogin || false;
     const role = state?.role || user?.role || 'recipient';
@@ -57,7 +69,13 @@ const AuthSuccess: React.FC = () => {
                     }
                 </p>
 
-                {email && !isFromLogin && (
+                {user && !user.hasCompletedProfile && (
+                    <p className="success-email-notice" style={{ color: '#00A86B', marginTop: '1rem' }}>
+                        Redirecting to profile setup in a moment...
+                    </p>
+                )}
+
+                {email && !isFromLogin && !user && (
                     <p className="success-email-notice">
                         Please check <strong>{email}</strong> to verify your email address.
                     </p>
@@ -86,28 +104,38 @@ const AuthSuccess: React.FC = () => {
                     )}
                 </div>
 
-                {/* Dashboard Coming Soon */}
-                <div className="success-coming-soon">
-                    <h4>Dashboard Coming Soon!</h4>
-                    <p>
-                        We're building your personalized {isDonor ? 'donor' : 'recipient'} dashboard.
-                        You'll be able to {isDonor ? 'post listings and manage donations' : 'find food and track claims'} here.
-                    </p>
-                </div>
-
                 {/* Action Buttons */}
                 <div className="success-actions">
-                    <Link to={ROUTES.HOME} className="success-btn-primary">
-                        Back to Home
-                    </Link>
-                    {isFromLogin ? (
-                        <button onClick={handleLogout} className="success-btn-secondary">
-                            Sign Out
-                        </button>
+                    {user?.hasCompletedProfile ? (
+                        <>
+                            <Link
+                                to={user.role === 'donor' ? ROUTES.DONOR_DASHBOARD : ROUTES.RECIPIENT_DASHBOARD}
+                                className="success-btn-primary"
+                            >
+                                Go to Dashboard
+                            </Link>
+                            <button onClick={handleLogout} className="success-btn-secondary">
+                                Sign Out
+                            </button>
+                        </>
+                    ) : user && !user.hasCompletedProfile ? (
+                        <>
+                            <Link to={ROUTES.PROFILE_SETUP} className="success-btn-primary">
+                                Complete Profile
+                            </Link>
+                            <button onClick={handleLogout} className="success-btn-secondary">
+                                Sign Out
+                            </button>
+                        </>
                     ) : (
-                        <Link to={ROUTES.LOGIN} className="success-btn-secondary">
-                            Sign In
-                        </Link>
+                        <>
+                            <Link to={ROUTES.HOME} className="success-btn-primary">
+                                Back to Home
+                            </Link>
+                            <Link to={ROUTES.LOGIN} className="success-btn-secondary">
+                                Sign In
+                            </Link>
+                        </>
                     )}
                 </div>
             </div>
