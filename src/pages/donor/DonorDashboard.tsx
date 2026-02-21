@@ -1,184 +1,198 @@
-/**
- * Donor Dashboard Page
- * 
- * Main dashboard view for donors showing:
- * - Stats overview (total listings, claimed, impact)
- * - Recent listings
- * - Quick action buttons
- */
-
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
-import { StatsCard } from '@components/common';
-import { Button } from '@components/common';
-import { Card, CardHeader, CardBody } from '@components/common';
+import { listingService } from '@services/listingService';
+import type { DonorStats, DonorListing } from '@services/listingService';
 import { ROUTES } from '@utils/constants';
 import './DonorDashboard.css';
 
-// Stats icon components
-const ListingsIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-        <line x1="3" y1="9" x2="21" y2="9" />
-        <line x1="9" y1="21" x2="9" y2="9" />
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const greeting = () => {
+    const h = new Date().getHours();
+    if (h < 12) return 'Good morning';
+    if (h < 17) return 'Good afternoon';
+    return 'Good evening';
+};
+
+const formatTimeAgo = (iso: string) => {
+    const diff = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${hrs}h ago`;
+    return `${Math.floor(hrs / 24)}d ago`;
+};
+
+const formatExpiry = (iso: string) => {
+    const d = new Date(iso);
+    const now = new Date();
+    const diff = d.getTime() - now.getTime();
+    if (diff < 0) return 'Expired';
+    const hrs = Math.floor(diff / 3600000);
+    if (hrs < 1) return 'Expires soon';
+    if (hrs < 24) return `${hrs}h left`;
+    return `${Math.floor(hrs / 24)}d left`;
+};
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+const TotalIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+        <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
+        <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
+    </svg>
+);
+
+const ActiveIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+        <circle cx="12" cy="12" r="9" /><path d="M12 6v6l4 2" strokeLinecap="round" />
     </svg>
 );
 
 const ClaimedIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-        <polyline points="22 4 12 14.01 9 11.01" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const MealsIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+        <path d="M18 8h1a4 4 0 0 1 0 8h-1" strokeLinecap="round" />
         <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-        <line x1="6" y1="1" x2="6" y2="4" />
-        <line x1="10" y1="1" x2="10" y2="4" />
-        <line x1="14" y1="1" x2="14" y2="4" />
+        <line x1="6" y1="1" x2="6" y2="4" strokeLinecap="round" />
+        <line x1="10" y1="1" x2="10" y2="4" strokeLinecap="round" />
+        <line x1="14" y1="1" x2="14" y2="4" strokeLinecap="round" />
     </svg>
 );
 
-const ImpactIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
+const PlusIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+        <line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" />
+        <line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" />
     </svg>
 );
 
-interface DashboardStats {
-    totalListings: number;
-    activeListing: number;
-    claimedListings: number;
-    mealsShared: number;
-}
+// ─── Status Pill ──────────────────────────────────────────────────────────────
+
+const StatusPill: React.FC<{ status: 'available' | 'claimed' | 'expired' }> = ({ status }) => {
+    const map = {
+        available: { label: 'Active', cls: 'pill--active' },
+        claimed: { label: 'Claimed', cls: 'pill--claimed' },
+        expired: { label: 'Expired', cls: 'pill--expired' },
+    };
+    const { label, cls } = map[status];
+    return <span className={`status-pill ${cls}`}><span className="pill-dot" />{label}</span>;
+};
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 const DonorDashboard: React.FC = () => {
     const { user } = useAuth();
-    const [stats, setStats] = useState<DashboardStats>({
-        totalListings: 0,
-        activeListing: 0,
-        claimedListings: 0,
-        mealsShared: 0,
-    });
+    const [stats, setStats] = useState<DonorStats>({ total: 0, active: 0, claimed: 0, mealsShared: 0 });
+    const [listings, setListings] = useState<DonorListing[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        // TODO: Fetch real stats from listingService
-        const loadStats = async () => {
-            try {
-                // Simulated stats for now
-                await new Promise(resolve => setTimeout(resolve, 500));
-                setStats({
-                    totalListings: 0,
-                    activeListing: 0,
-                    claimedListings: 0,
-                    mealsShared: 0,
-                });
-            } catch (error) {
-                console.error('Error loading stats:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+    const load = useCallback(async () => {
+        if (!user?.id) return;
+        setIsLoading(true);
+        try {
+            const [statsRes, listingsRes] = await Promise.all([
+                listingService.getDonorStats(user.id),
+                listingService.getDonorListings(user.id, 8),
+            ]);
+            if (statsRes.success && statsRes.data) setStats(statsRes.data);
+            if (listingsRes.success && listingsRes.data) setListings(listingsRes.data);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [user?.id]);
 
-        loadStats();
-    }, []);
+    useEffect(() => { load(); }, [load]);
 
-    const greeting = () => {
-        const hour = new Date().getHours();
-        if (hour < 12) return 'Good morning';
-        if (hour < 17) return 'Good afternoon';
-        return 'Good evening';
-    };
+    const firstName = user?.fullName?.split(' ')[0] || 'there';
+    const orgName = user?.donorProfile?.organizationName;
 
     return (
-        <div className="donor-dashboard">
-            {/* Welcome Section */}
-            <div className="donor-dashboard__welcome">
-                <h2 className="donor-dashboard__greeting">
-                    {greeting()}, {user?.fullName?.split(' ')[0] || 'there'}! 👋
-                </h2>
-                <p className="donor-dashboard__subtitle">
-                    Ready to make a difference today?
-                </p>
+        <div className="dd">
+            {/* ── Header Bar ───────────────────────────────────── */}
+            <div className="dd__topbar">
+                <div className="dd__topbar-left">
+                    <h1 className="dd__greeting">{greeting()}, {firstName}</h1>
+                    {orgName && <p className="dd__org">{orgName}</p>}
+                </div>
+                <Link to={ROUTES.CREATE_LISTING} className="dd__post-btn">
+                    <PlusIcon /> Post Food
+                </Link>
             </div>
 
-            {/* Stats Grid */}
-            <div className="donor-dashboard__stats">
-                <StatsCard
-                    icon={<ListingsIcon />}
-                    value={isLoading ? '...' : stats.totalListings}
-                    label="Total Listings"
-                    color="accent"
-                />
-                <StatsCard
-                    icon={<ClaimedIcon />}
-                    value={isLoading ? '...' : stats.claimedListings}
-                    label="Claimed"
-                    color="success"
-                />
-                <StatsCard
-                    icon={<MealsIcon />}
-                    value={isLoading ? '...' : stats.mealsShared}
-                    label="Meals Shared"
-                    color="warning"
-                />
-                <StatsCard
-                    icon={<ImpactIcon />}
-                    value={isLoading ? '...' : stats.activeListing}
-                    label="Active Now"
-                    color="accent"
-                />
+            {/* ── Stats Grid ───────────────────────────────────── */}
+            <div className="dd__stats">
+                {[
+                    { icon: <TotalIcon />, value: isLoading ? '\u2014' : stats.total, label: 'Total Listings', color: 'default', delay: '0ms' },
+                    { icon: <ActiveIcon />, value: isLoading ? '\u2014' : stats.active, label: 'Active Now', color: 'green', delay: '60ms' },
+                    { icon: <ClaimedIcon />, value: isLoading ? '\u2014' : stats.claimed, label: 'Claimed', color: 'amber', delay: '120ms' },
+                    { icon: <MealsIcon />, value: isLoading ? '\u2014' : stats.mealsShared, label: 'Meals Shared', color: 'blue', delay: '180ms' },
+                ].map(({ icon, value, label, color, delay }) => (
+                    <div key={label} className={`dd__stat-card dd__stat-card--${color}`} style={{ animationDelay: delay }}>
+                        <div className="dd__stat-icon">{icon}</div>
+                        <div className="dd__stat-value">{value}</div>
+                        <div className="dd__stat-label">{label}</div>
+                    </div>
+                ))}
             </div>
 
-            {/* Quick Actions */}
-            <Card className="donor-dashboard__actions-card">
-                <CardHeader>
-                    <h3>Quick Actions</h3>
-                    <p>Start sharing food with your community</p>
-                </CardHeader>
-                <CardBody>
-                    <div className="donor-dashboard__actions">
-                        <Link to={ROUTES.CREATE_LISTING}>
-                            <Button variant="primary" size="lg" fullWidth>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="16" />
-                                    <line x1="8" y1="12" x2="16" y2="12" />
-                                </svg>
-                                Create New Listing
-                            </Button>
-                        </Link>
-                        <Link to="/donor/listings">
-                            <Button variant="secondary" size="lg" fullWidth>
-                                View All Listings
-                            </Button>
-                        </Link>
-                    </div>
-                </CardBody>
-            </Card>
+            {/* ── Listings Table ───────────────────────────────── */}
+            <div className="dd__section">
+                <div className="dd__section-header">
+                    <h2 className="dd__section-title">Recent Listings</h2>
+                    <Link to="/donor/listings" className="dd__section-link">View all &rarr;</Link>
+                </div>
 
-            {/* Recent Activity Placeholder */}
-            <Card className="donor-dashboard__recent">
-                <CardHeader>
-                    <h3>Recent Activity</h3>
-                </CardHeader>
-                <CardBody>
-                    <div className="donor-dashboard__empty-state">
-                        <div className="donor-dashboard__empty-icon">🍽️</div>
-                        <h4>No listings yet</h4>
-                        <p>Create your first food listing to start sharing with your community.</p>
-                        <Link to={ROUTES.CREATE_LISTING}>
-                            <Button variant="primary">Create Listing</Button>
+                {isLoading ? (
+                    <div className="dd__loading">
+                        {[...Array(3)].map((_, i) => (
+                            <div key={i} className="dd__skeleton" style={{ animationDelay: `${i * 100}ms` }} />
+                        ))}
+                    </div>
+                ) : listings.length === 0 ? (
+                    <div className="dd__empty">
+                        <div className="dd__empty-icon">&#127869;</div>
+                        <p className="dd__empty-title">No listings yet</p>
+                        <p className="dd__empty-sub">Post your first surplus food to get started</p>
+                        <Link to={ROUTES.CREATE_LISTING} className="dd__empty-btn">
+                            <PlusIcon /> Create Listing
                         </Link>
                     </div>
-                </CardBody>
-            </Card>
+                ) : (
+                    <div className="dd__table-wrap">
+                        <table className="dd__table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Status</th>
+                                    <th>Quantity</th>
+                                    <th>Expires</th>
+                                    <th>Posted</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {listings.map((l, i) => (
+                                    <tr key={l.id} style={{ animationDelay: `${i * 40}ms` }} className="dd__table-row">
+                                        <td className="dd__table-title">{l.title}</td>
+                                        <td><StatusPill status={l.status} /></td>
+                                        <td className="dd__table-qty">{l.quantity} {l.quantityUnit}</td>
+                                        <td className={`dd__table-expiry ${l.status === 'expired' ? 'dd__table-expiry--expired' : ''}`}>
+                                            {formatExpiry(l.expiryTime)}
+                                        </td>
+                                        <td className="dd__table-time">{formatTimeAgo(l.createdAt)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
