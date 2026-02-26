@@ -5,15 +5,35 @@ export const ROUTES = {
     HOME: '/',
     LOGIN: '/login',
     REGISTER: '/register',
+    VERIFY_EMAIL: '/auth/verify-email',
     AUTH_SUCCESS: '/auth/success',
+    AUTH_CALLBACK: '/auth/callback',
+    GOOGLE_SETUP: '/auth/google-setup',
     FORGOT_PASSWORD: '/forgot-password',
+    PROFILE_SETUP: '/profile-setup',
+    // Donor
     DONOR_DASHBOARD: '/donor/dashboard',
     CREATE_LISTING: '/donor/create-listing',
+    MY_LISTINGS: '/donor/listings',
+    PROFILE: '/profile',
+    // Recipient
     RECIPIENT_DASHBOARD: '/recipient/dashboard',
     BROWSE_LISTINGS: '/recipient/browse',
+    RECIPIENT_PROFILE: '/recipient/profile',
+    // Dynamic
     LISTING_DETAILS: '/listing/:id',
-    PROFILE: '/profile',
 } as const;
+
+/** Maps route pathnames to human-readable page titles shown in the header */
+export const PAGE_TITLES: Record<string, string> = {
+    '/donor/dashboard': 'Dashboard',
+    '/donor/create-listing': 'Create Listing',
+    '/donor/listings': 'My Listings',
+    '/profile': 'Profile',
+    '/recipient/dashboard': 'Dashboard',
+    '/recipient/browse': 'Browse Food',
+    '/recipient/profile': 'Profile',
+};
 
 // API Endpoints (will be configured with Supabase)
 export const API_ENDPOINTS = {
