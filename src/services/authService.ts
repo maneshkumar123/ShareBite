@@ -358,4 +358,69 @@ export const authService = {
             return null;
         });
     },
+
+    /**
+     * Initiate Google OAuth sign-in.
+     * Triggers a browser redirect — the promise resolves only on error;
+     * on success the browser navigates away before this resolves.
+     */
+    signInWithGoogle: async (): Promise<ApiResponse<null>> => {
+        if (!isSupabaseConfigured()) {
+            return { success: false, error: 'Supabase is not configured' };
+        }
+
+        return apiRequest(async () => {
+            const { error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: `${window.location.origin}/auth/callback`,
+                    scopes: 'email profile',
+                },
+            });
+            if (error) throw error;
+            return null;
+        });
+    },
+
+    /**
+     * Set role for a new OAuth user.
+     * Updates both the profiles table (DB source of truth) and JWT metadata
+     * (so buildUserFromSession picks up the role on reload).
+     * Also stores extra data so ProfileSetup can pre-fill its fields.
+     */
+    setUserRole: async (
+        userId: string,
+        role: 'donor' | 'recipient',
+        extraData?: {
+            organizationName?: string;
+            organizationType?: string;
+            isCharity?: boolean;
+        }
+    ): Promise<ApiResponse<null>> => {
+        if (!isSupabaseConfigured()) {
+            return { success: false, error: 'Supabase is not configured' };
+        }
+
+        return apiRequest(async () => {
+            // 1. Write role to profiles table
+            const { error: dbError } = await supabase
+                .from('profiles')
+                .update({ role })
+                .eq('id', userId);
+            if (dbError) throw dbError;
+
+            // 2. Persist role + extra data into JWT metadata.
+            //    ProfileSetup reads organization_name / organization_type / is_charity
+            //    from metadata to pre-fill its form.
+            const metadata: Record<string, unknown> = { role };
+            if (extraData?.organizationName) metadata.organization_name = extraData.organizationName;
+            if (extraData?.organizationType) metadata.organization_type = extraData.organizationType;
+            if (extraData?.isCharity !== undefined) metadata.is_charity = extraData.isCharity;
+
+            const { error: metaError } = await supabase.auth.updateUser({ data: metadata });
+            if (metaError) throw metaError;
+
+            return null;
+        });
+    },
 };
