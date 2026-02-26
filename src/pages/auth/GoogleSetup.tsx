@@ -91,7 +91,9 @@ const GoogleSetup: React.FC = () => {
     const validate = (): boolean => {
         const newErrors: Record<string, string> = {};
         activeFields.forEach(field => {
-            if (field.required && !formData[field.name]?.trim()) {
+            const value = formData[field.name];
+            const isEmpty = field.type === 'select' ? !value : !value?.trim();
+            if (field.required && isEmpty) {
                 newErrors[field.name] = `${field.label} is required`;
             }
         });
@@ -118,7 +120,13 @@ const GoogleSetup: React.FC = () => {
             return;
         }
 
-        await refreshUser();
+        try {
+            await refreshUser();
+        } catch {
+            // Role was saved successfully — proceed even if profile refresh fails
+        } finally {
+            setIsSubmitting(false);
+        }
         navigate(ROUTES.PROFILE_SETUP, { replace: true });
     };
 
@@ -157,7 +165,6 @@ const GoogleSetup: React.FC = () => {
                                 field={field}
                                 value={formData[field.name] || ''}
                                 onChange={handleInputChange}
-                                onBlur={() => {}}
                                 error={errors[field.name]}
                                 disabled={isSubmitting}
                             />
@@ -165,7 +172,7 @@ const GoogleSetup: React.FC = () => {
                     </div>
 
                     {errors.submit && (
-                        <div className="google-setup-error">{errors.submit}</div>
+                        <div className="google-setup-error" role="alert">{errors.submit}</div>
                     )}
 
                     <button
