@@ -178,7 +178,7 @@ const ProfileSetup: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!validateForm() || !user || !location) {
+        if (!validateForm() || !user || !user.role || !location) {
             return;
         }
 
@@ -196,7 +196,7 @@ const ProfileSetup: React.FC = () => {
 
             const response = await authService.createRoleProfile(
                 user.id,
-                user.role!,
+                user.role,
                 profileData
             );
 
