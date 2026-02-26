@@ -99,6 +99,7 @@
     background-color: #121212;
     padding: clamp(80px, 10vh, 120px) clamp(16px, 4vw, 48px) clamp(40px, 6vh, 80px);
     box-sizing: border-box;
+    color-scheme: dark;
 }
 
 .login-container {
@@ -503,7 +504,7 @@
 
 .login-social {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
     margin-bottom: 1rem;
 }
@@ -533,6 +534,13 @@
 .login-social-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.login-social-btn--full {
+    width: 100%;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 14px 20px;
 }
 
 .login-social-btn svg {
@@ -613,10 +621,6 @@
         border-radius: 20px;
     }
 
-    .login-social {
-        grid-template-columns: 1fr;
-    }
-
     .login-options {
         flex-direction: column;
         align-items: flex-start;
@@ -634,6 +638,26 @@
         padding: 20px 16px;
         border-radius: 16px;
     }
+}
+
+/* ==============================================
+   FORM FIELD OVERRIDES
+   Force dark-theme colors for form fields.
+   Higher specificity (2 classes) beats FormField.css (1 class)
+   and overrides the global color-scheme:light from index.css.
+   ============================================== */
+
+.login-page .form-field-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.login-page .form-field-input {
+    color: #F7F7F7;
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.login-page .form-field-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* ==============================================
