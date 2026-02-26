@@ -7,8 +7,8 @@ export const ROUTES = {
     REGISTER: '/register',
     VERIFY_EMAIL: '/auth/verify-email',
     AUTH_SUCCESS: '/auth/success',
-    AUTH_CALLBACK: '/auth/callback',
-    GOOGLE_SETUP: '/auth/google-setup',
+    AUTH_CALLBACK: '/auth/callback',      // OAuth PKCE callback landing page
+    GOOGLE_SETUP: '/auth/google-setup',   // role selection for new Google users
     FORGOT_PASSWORD: '/forgot-password',
     PROFILE_SETUP: '/profile-setup',
     // Donor
