@@ -44,6 +44,12 @@ const ProfileSetup: React.FC = () => {
     const [locationMethod, setLocationMethod] = useState<'browser' | 'geocode' | null>(null);
 
     useEffect(() => {
+        // Guard: OAuth users without a role shouldn't be here
+        if (user && !user.role) {
+            navigate(ROUTES.GOOGLE_SETUP, { replace: true });
+            return;
+        }
+
         // Redirect if profile is already complete
         if (user?.hasCompletedProfile) {
             navigate(user.role === 'donor' ? ROUTES.DONOR_DASHBOARD : ROUTES.RECIPIENT_DASHBOARD);
@@ -190,7 +196,7 @@ const ProfileSetup: React.FC = () => {
 
             const response = await authService.createRoleProfile(
                 user.id,
-                user.role,
+                user.role!,
                 profileData
             );
 

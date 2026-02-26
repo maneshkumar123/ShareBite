@@ -9,6 +9,7 @@
  */
 
 import { supabase, apiRequest, isSupabaseConfigured } from './api';
+import type { Session } from '@supabase/supabase-js';
 import type { ApiResponse } from '../types';
 
 // ==============================================
@@ -40,11 +41,12 @@ export interface RegisterData {
 export interface AuthUser {
     id: string;
     email: string;
-    role: 'donor' | 'recipient';
+    role: 'donor' | 'recipient' | null;  // null for new OAuth users before role is selected
     fullName: string;
     phone?: string;
     avatarUrl?: string;
     createdAt: string;
+    hasCompletedProfile: boolean;
 
     // Extended profile based on role
     donorProfile?: {
@@ -93,6 +95,7 @@ export const authService = {
                 email: data.email,
                 password: data.password,
                 options: {
+                    emailRedirectTo: `${window.location.origin}/auth/success`,
                     data: {
                         // These are passed to the trigger via raw_user_meta_data
                         full_name: data.fullName,
@@ -120,6 +123,7 @@ export const authService = {
                 fullName: data.fullName,
                 phone: data.phone,
                 createdAt: new Date().toISOString(),
+                hasCompletedProfile: false, // Extended profile not created yet
             } as AuthUser;
         });
     },
@@ -165,6 +169,35 @@ export const authService = {
     },
 
     /**
+     * Build a minimal AuthUser directly from the Supabase JWT session.
+     * Uses user_metadata set during registration — no database call needed.
+     * This is used for instant auth state on load; profile is enriched later.
+     */
+    buildUserFromSession: (session: Session): AuthUser => {
+        const { user } = session;
+        const meta = user.user_metadata || {};
+        return {
+            id: user.id,
+            email: user.email!,
+            role: (meta.role as 'donor' | 'recipient') || null,
+            fullName: meta.full_name || user.email!,
+            phone: meta.phone || undefined,
+            avatarUrl: meta.avatar_url || undefined,
+            createdAt: user.created_at,
+            hasCompletedProfile: false, // enriched once fetchUserProfile completes
+        };
+    },
+
+    /**
+     * Get the current session from localStorage — instant, no network call.
+     * This is the Supabase-recommended way to initialise auth state in a SPA.
+     */
+    getInitialSession: async (): Promise<Session | null> => {
+        const { data: { session } } = await supabase.auth.getSession();
+        return session;
+    },
+
+    /**
      * Get current authenticated user with profile
      */
     getCurrentUser: async (): Promise<ApiResponse<AuthUser | null>> => {
@@ -173,10 +206,10 @@ export const authService = {
         }
 
         return apiRequest(async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            if (!user) return null;
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session?.user) return null;
 
-            return await authService.fetchUserProfile(user.id);
+            return await authService.fetchUserProfile(session.user.id);
         });
     },
 
@@ -184,7 +217,6 @@ export const authService = {
      * Fetch complete user profile from database
      */
     fetchUserProfile: async (userId: string): Promise<AuthUser | null> => {
-        // Fetch base profile
         const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('*')
@@ -192,22 +224,22 @@ export const authService = {
             .single();
 
         if (profileError || !profile) {
-            console.error('Error fetching profile:', profileError);
+            console.error('[authService] Error fetching base profile:', profileError);
             return null;
         }
 
         const authUser: AuthUser = {
             id: profile.id,
             email: profile.email,
-            role: profile.role,
+            role: (profile.role as 'donor' | 'recipient') || null,
             fullName: profile.full_name,
             phone: profile.phone,
             avatarUrl: profile.avatar_url,
             createdAt: profile.created_at,
+            hasCompletedProfile: false,
         };
 
-        // Fetch role-specific profile (may not exist yet - created during onboarding)
-        // Using maybeSingle() returns null instead of error when no row exists
+        // Fetch role-specific profile (may not exist yet — created during onboarding)
         if (profile.role === 'donor') {
             const { data: donorProfile } = await supabase
                 .from('donor_profiles')
@@ -222,6 +254,7 @@ export const authService = {
                     address: donorProfile.address,
                     isVerified: donorProfile.is_verified,
                 };
+                authUser.hasCompletedProfile = true;
             }
         } else if (profile.role === 'recipient') {
             const { data: recipientProfile } = await supabase
@@ -236,6 +269,7 @@ export const authService = {
                     address: recipientProfile.address,
                     isCharity: recipientProfile.is_charity,
                 };
+                authUser.hasCompletedProfile = true;
             }
         }
 
@@ -298,18 +332,13 @@ export const authService = {
     },
 
     /**
-     * Listen for auth state changes
+     * Listen for future auth state changes (sign-in, sign-out, token refresh).
+     * Passes the raw Supabase event and session — the caller decides what to do.
+     * Initial session setup is handled separately via getInitialSession().
      */
-    onAuthStateChange: (callback: (user: AuthUser | null) => void) => {
-        return supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' && session?.user) {
-                // Give time for trigger to create profile
-                await new Promise(resolve => setTimeout(resolve, 300));
-                const profile = await authService.fetchUserProfile(session.user.id);
-                callback(profile);
-            } else if (event === 'SIGNED_OUT') {
-                callback(null);
-            }
+    onAuthStateChange: (callback: (event: string, session: Session | null) => void) => {
+        return supabase.auth.onAuthStateChange((event, session) => {
+            callback(event, session);
         });
     },
 
