@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { supabase } from '@services/api';
+import { listingService } from '@services/listingService';
+import { profileService } from '@services/profileService';
 import { ROUTES } from '@utils/constants';
 import './RecipientDashboard.css';
 
@@ -10,7 +12,7 @@ import './RecipientDashboard.css';
 interface RecipientStats {
     totalClaimed: number;
     mealsReceived: number;
-    nearbyCount: number;
+    availableCount: number;
 }
 
 interface NearbyListing {
@@ -73,6 +75,12 @@ const SearchIcon = () => (
     </svg>
 );
 
+const ChevronRight = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+        <polyline points="9 18 15 12 9 6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
 const MapPinIcon = () => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="13" height="13">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
@@ -80,9 +88,22 @@ const MapPinIcon = () => (
     </svg>
 );
 
+const SpinnerIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="13" height="13"
+        style={{ animation: 'rd-spin 0.75s linear infinite', flexShrink: 0 }}>
+        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+            strokeLinecap="round"/>
+    </svg>
+);
+
 // ─── Listing Card ─────────────────────────────────────────────────────────────
 
-const ListingCard: React.FC<{ listing: NearbyListing; index: number }> = ({ listing, index }) => {
+const ListingCard: React.FC<{
+    listing: NearbyListing;
+    index: number;
+    isClaiming: boolean;
+    onClaim: () => void;
+}> = ({ listing, index, isClaiming, onClaim }) => {
     const expiryText = formatExpiry(listing.expiryTime);
     const isUrgent = expiryText === 'Expires soon';
 
@@ -106,27 +127,35 @@ const ListingCard: React.FC<{ listing: NearbyListing; index: number }> = ({ list
                 </div>
             )}
             <div className="rd__listing-footer">
-                <Link to={`/listing/${listing.id}`} className="rd__claim-btn">
-                    Claim Food
-                </Link>
+                <Link to={`/listing/${listing.id}`} className="rd__details-link">Details</Link>
+                <button
+                    className={`rd__claim-btn${isClaiming ? ' rd__claim-btn--claiming' : ''}`}
+                    onClick={onClaim}
+                    disabled={isClaiming}
+                >
+                    {isClaiming
+                        ? <><SpinnerIcon /> Claiming…</>
+                        : <><span>Claim Food</span><ChevronRight /></>
+                    }
+                </button>
             </div>
         </div>
     );
 };
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-
 const RecipientDashboard: React.FC = () => {
     const { user } = useAuth();
-    const [stats, setStats] = useState<RecipientStats>({ totalClaimed: 0, mealsReceived: 0, nearbyCount: 0 });
+    const [stats, setStats] = useState<RecipientStats>({ totalClaimed: 0, mealsReceived: 0, availableCount: 0 });
     const [listings, setListings] = useState<NearbyListing[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [claimingId, setClaimingId] = useState<string | null>(null);
+    const [claimedIds, setClaimedIds] = useState<Set<string>>(new Set());
 
     const load = useCallback(async () => {
         if (!user?.id) return;
         setIsLoading(true);
         try {
-            // Load claimed stats
+            // Claimed stats
             const { data: claimedData } = await supabase
                 .from('food_listings')
                 .select('quantity')
@@ -135,27 +164,39 @@ const RecipientDashboard: React.FC = () => {
             const totalClaimed = claimedData?.length ?? 0;
             const mealsReceived = (claimedData ?? []).reduce((sum: number, r: { quantity: number | null }) => sum + (r.quantity ?? 0), 0);
 
-            // Load nearby/available listings
-            const { data: nearbyData } = await supabase
-                .from('food_listings')
-                .select('id, title, quantity, quantity_unit, expiry_time, address, donor_id')
-                .eq('status', 'available')
-                .gt('expiry_time', new Date().toISOString())
-                .order('created_at', { ascending: false })
-                .limit(6);
+            // Recipient location for nearby RPC
+            let userLat: number | null = null;
+            let userLng: number | null = null;
+            const profileRes = await profileService.getRecipientProfile(user.id);
+            if (profileRes.success && profileRes.data) {
+                userLat = profileRes.data.latitude ?? null;
+                userLng = profileRes.data.longitude ?? null;
+            }
 
-            const nearby: NearbyListing[] = (nearbyData ?? []).map((row: { id: string; title: string; quantity: number; quantity_unit: string; expiry_time: string; address: string | null; donor_id: string }) => ({
+            // Use RPC for real nearby listings (10 km if location set, else all)
+            const RADIUS = userLat && userLng ? 10_000 : null;
+            const rpcRes = await listingService.getListingsWithDistance(userLat, userLng, RADIUS, 6);
+            const nearby: NearbyListing[] = (rpcRes.data ?? []).map(row => ({
                 id: row.id,
                 title: row.title,
                 quantity: row.quantity,
-                quantityUnit: row.quantity_unit,
-                expiryTime: row.expiry_time,
-                address: row.address ?? '',
-                donorName: 'Donor',
+                quantityUnit: row.quantityUnit,
+                expiryTime: row.expiryTime,
+                address: row.address,
+                donorName: row.donorName,
             }));
 
-            setStats({ totalClaimed, mealsReceived, nearbyCount: nearby.length });
+            // Available count: total rows returned by RPC without limit is expensive;
+            // use a quick Supabase count query instead
+            const { count: availableCount } = await supabase
+                .from('food_listings')
+                .select('*', { count: 'exact', head: true })
+                .eq('status', 'available')
+                .gt('expiry_time', new Date().toISOString());
+
+            setStats({ totalClaimed, mealsReceived, availableCount: availableCount ?? nearby.length });
             setListings(nearby);
+            setClaimedIds(new Set());
         } finally {
             setIsLoading(false);
         }
@@ -163,7 +204,27 @@ const RecipientDashboard: React.FC = () => {
 
     useEffect(() => { load(); }, [load]);
 
+    const handleClaim = async (listing: NearbyListing) => {
+        if (!user?.id || claimingId) return;
+        setClaimingId(listing.id);
+        try {
+            const res = await listingService.claimListing(listing.id, user.id);
+            if (res.success) {
+                setClaimedIds(prev => new Set([...prev, listing.id]));
+                setStats(prev => ({
+                    ...prev,
+                    totalClaimed: prev.totalClaimed + 1,
+                    mealsReceived: prev.mealsReceived + listing.quantity,
+                    availableCount: Math.max(0, prev.availableCount - 1),
+                }));
+            }
+        } finally {
+            setClaimingId(null);
+        }
+    };
+
     const firstName = user?.fullName?.split(' ')[0] || 'there';
+    const visibleListings = listings.filter(l => !claimedIds.has(l.id));
 
     return (
         <div className="rd">
@@ -173,7 +234,7 @@ const RecipientDashboard: React.FC = () => {
                     <h1 className="rd__greeting">{greeting()}, {firstName}</h1>
                     <p className="rd__subtitle">Find surplus food near you</p>
                 </div>
-                <Link to={ROUTES.BROWSE_LISTINGS} className="rd__browse-btn">
+                <Link to={ROUTES.BROWSE_LISTINGS} className="rd__browse-btn" aria-label="Browse all available listings">
                     <SearchIcon /> Browse All
                 </Link>
             </div>
@@ -181,9 +242,9 @@ const RecipientDashboard: React.FC = () => {
             {/* ── Stats Grid ───────────────────────────────────── */}
             <div className="rd__stats">
                 {[
-                    { icon: <NearbyIcon />, value: isLoading ? '\u2014' : stats.nearbyCount, label: 'Available Nearby', color: 'green', delay: '0ms' },
-                    { icon: <ClaimedIcon />, value: isLoading ? '\u2014' : stats.totalClaimed, label: 'Items Claimed', color: 'amber', delay: '60ms' },
-                    { icon: <MealsIcon />, value: isLoading ? '\u2014' : stats.mealsReceived, label: 'Meals Received', color: 'blue', delay: '120ms' },
+                    { icon: <NearbyIcon />, value: isLoading ? '—' : stats.availableCount, label: 'Available Now', color: 'green', delay: '0ms' },
+                    { icon: <ClaimedIcon />, value: isLoading ? '—' : stats.totalClaimed, label: 'Items Claimed', color: 'amber', delay: '60ms' },
+                    { icon: <MealsIcon />, value: isLoading ? '—' : stats.mealsReceived, label: 'Meals Received', color: 'blue', delay: '120ms' },
                 ].map(({ icon, value, label, color, delay }) => (
                     <div key={label} className={`rd__stat-card rd__stat-card--${color}`} style={{ animationDelay: delay }}>
                         <div className="rd__stat-icon">{icon}</div>
@@ -197,7 +258,9 @@ const RecipientDashboard: React.FC = () => {
             <div className="rd__section">
                 <div className="rd__section-header">
                     <h2 className="rd__section-title">Available Near You</h2>
-                    <Link to={ROUTES.BROWSE_LISTINGS} className="rd__section-link">Browse all &rarr;</Link>
+                    <Link to={ROUTES.BROWSE_LISTINGS} className="rd__section-link">
+                        Browse all <ChevronRight />
+                    </Link>
                 </div>
 
                 {isLoading ? (
@@ -206,9 +269,14 @@ const RecipientDashboard: React.FC = () => {
                             <div key={i} className="rd__skeleton" style={{ animationDelay: `${i * 80}ms` }} />
                         ))}
                     </div>
-                ) : listings.length === 0 ? (
+                ) : visibleListings.length === 0 ? (
                     <div className="rd__empty">
-                        <div className="rd__empty-icon">&#x1F4CD;</div>
+                        <div className="rd__empty-icon" aria-hidden="true">
+                            <svg viewBox="0 0 80 80" fill="none" width="72" height="72">
+                                <path d="M40 70s-18-12-18-29a18 18 0 0 1 36 0c0 17-18 29-18 29z" stroke="rgba(125,255,18,0.35)" strokeWidth="2.4" />
+                                <circle cx="40" cy="41" r="7.5" stroke="rgba(125,255,18,0.45)" strokeWidth="2.4" />
+                            </svg>
+                        </div>
                         <p className="rd__empty-title">No listings near you yet</p>
                         <p className="rd__empty-sub">When donors post food in your area, it will appear here</p>
                         <Link to={ROUTES.BROWSE_LISTINGS} className="rd__empty-btn">
@@ -217,8 +285,14 @@ const RecipientDashboard: React.FC = () => {
                     </div>
                 ) : (
                     <div className="rd__grid">
-                        {listings.map((l, i) => (
-                            <ListingCard key={l.id} listing={l} index={i} />
+                        {visibleListings.map((l, i) => (
+                            <ListingCard
+                                key={l.id}
+                                listing={l}
+                                index={i}
+                                isClaiming={claimingId === l.id}
+                                onClaim={() => handleClaim(l)}
+                            />
                         ))}
                     </div>
                 )}

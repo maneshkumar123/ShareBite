@@ -12,6 +12,8 @@
     flex-direction: column;
     gap: 6px;
     width: 100%;
+    color-scheme: dark;
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Label - Matches Hero subtitle style */

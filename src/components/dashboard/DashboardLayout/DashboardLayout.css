@@ -1,76 +1,95 @@
 /**
  * Dashboard Layout Styles
- * 
- * Mobile-first with sidebar overlay on small screens,
- * persistent sidebar on desktop.
+ *
+ * Shell layout — Ruled Paper meets Product aesthetic:
+ *   ┌─ Fixed Sidebar ──┬─ Sticky Header ─────────────────┐
+ *   │  white bg        │  green title accent              │
+ *   │  lime-green ──── │ ──────────────────────────────── │
+ *   │  right border    │ SCROLLABLE CONTENT (Outlet)       │
+ *   └──────────────────┴──────────────────────────────────┘
+ *
+ * The lime-green spine (sidebar right border) and the title's
+ * left accent both mark the nav-to-content boundary.
+ * Only .dashboard-content scrolls.
  */
 
+/* ── Shell: locked to viewport ──────────────────────────── */
 .dashboard-layout {
     display: flex;
-    min-height: 100vh;
-    background-color: var(--color-bg-primary);
+    height: 100vh;
+    overflow: hidden;
+    background: var(--color-bg-primary);
 }
 
-/* Mobile Overlay */
-.dashboard-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
-    z-index: var(--z-overlay);
-    animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-/* Main Content Area */
+/* ── Main Area: everything to the right of the sidebar ──── */
 .dashboard-main {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    width: 100%;
-}
-
-/* Page Content */
-.dashboard-content {
     flex: 1;
-    padding: var(--spacing-md);
-    overflow-y: auto;
+    min-width: 0;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* ==========================================
-   RESPONSIVE - Tablet (768px+)
-   ========================================== */
-
-@media (min-width: 768px) {
-    .dashboard-content {
-        padding: var(--spacing-lg);
-    }
-}
-
-/* ==========================================
-   RESPONSIVE - Desktop (1024px+)
-   ========================================== */
-
+/* Desktop: push main area past the fixed sidebar */
 @media (min-width: 1024px) {
     .dashboard-main {
         margin-left: var(--sidebar-width);
     }
+}
 
+/* ── Content: THE only scrollable zone ──────────────────── */
+.dashboard-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* Scrollbar picks up the green accent on hover */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+    padding: 1.5rem;
+}
+
+.dashboard-content::-webkit-scrollbar {
+    width: 4px;
+}
+
+.dashboard-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 2px;
+    transition: background 0.2s;
+}
+
+.dashboard-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(125, 255, 18, 0.4);
+}
+
+@media (min-width: 768px) {
+    .dashboard-content {
+        padding: 1.5rem 1.75rem;
+    }
+}
+
+/* ── Mobile overlay (when sidebar opens) ────────────────── */
+.dashboard-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 24, 21, 0.4);
+    z-index: var(--z-overlay);
+    animation: overlay-in 0.2s ease both;
+}
+
+@keyframes overlay-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Overlay not needed on desktop */
+@media (min-width: 1024px) {
     .dashboard-overlay {
         display: none;
-    }
-
-    .dashboard-content {
-        padding: var(--spacing-xl);
     }
 }

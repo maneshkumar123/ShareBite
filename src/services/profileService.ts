@@ -31,33 +31,29 @@ export const profileService = {
     getDonorProfile: async (userId: string): Promise<ApiResponse<DonorProfileData>> => {
         return apiRequest(async () => {
             const { data, error } = await supabase
-                .from('profiles')
-                .select(`
-                    id, email, full_name, phone,
-                    donor_profiles!id (
-                        organization_name, organization_type,
-                        contact_person, address, is_verified
-                    )
-                `)
-                .eq('id', userId)
-                .single();
+                .rpc('get_donor_profile', { p_user_id: userId });
 
             if (error) throw error;
 
-            const dp = Array.isArray(data.donor_profiles) ? data.donor_profiles[0] : data.donor_profiles;
+            const d = data as {
+                id: string; email: string; full_name: string; phone: string | null;
+                organization_name: string | null; organization_type: string | null;
+                contact_person: string | null; address: string | null;
+                is_verified: boolean | null; latitude: number | null; longitude: number | null;
+            };
 
             return {
-                id: data.id,
-                email: data.email,
-                fullName: data.full_name,
-                phone: data.phone ?? null,
-                organizationName: dp?.organization_name ?? '',
-                organizationType: dp?.organization_type ?? 'other',
-                contactPerson: dp?.contact_person ?? null,
-                address: dp?.address ?? '',
-                latitude: null,
-                longitude: null,
-                isVerified: dp?.is_verified ?? false,
+                id: d.id,
+                email: d.email,
+                fullName: d.full_name,
+                phone: d.phone ?? null,
+                organizationName: d.organization_name ?? '',
+                organizationType: d.organization_type ?? 'other',
+                contactPerson: d.contact_person ?? null,
+                address: d.address ?? '',
+                latitude: d.latitude ?? null,
+                longitude: d.longitude ?? null,
+                isVerified: d.is_verified ?? false,
             };
         });
     },
@@ -104,30 +100,26 @@ export const profileService = {
     getRecipientProfile: async (userId: string): Promise<ApiResponse<RecipientProfileData>> => {
         return apiRequest(async () => {
             const { data, error } = await supabase
-                .from('profiles')
-                .select(`
-                    id, email, full_name, phone,
-                    recipient_profiles!id (
-                        organization_name, address, is_charity
-                    )
-                `)
-                .eq('id', userId)
-                .single();
+                .rpc('get_recipient_profile', { p_user_id: userId });
 
             if (error) throw error;
 
-            const rp = Array.isArray(data.recipient_profiles) ? data.recipient_profiles[0] : data.recipient_profiles;
+            const d = data as {
+                id: string; email: string; full_name: string; phone: string | null;
+                organization_name: string | null; address: string | null;
+                is_charity: boolean | null; latitude: number | null; longitude: number | null;
+            };
 
             return {
-                id: data.id,
-                email: data.email,
-                fullName: data.full_name,
-                phone: data.phone ?? null,
-                organizationName: rp?.organization_name ?? null,
-                address: rp?.address ?? '',
-                latitude: null,
-                longitude: null,
-                isCharity: rp?.is_charity ?? false,
+                id: d.id,
+                email: d.email,
+                fullName: d.full_name,
+                phone: d.phone ?? null,
+                organizationName: d.organization_name ?? null,
+                address: d.address ?? '',
+                latitude: d.latitude ?? null,
+                longitude: d.longitude ?? null,
+                isCharity: d.is_charity ?? false,
             };
         });
     },

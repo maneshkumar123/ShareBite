@@ -8,6 +8,55 @@ import type { DonorStats } from '@services/listingService';
 import MapPicker from '@components/common/MapPicker';
 import './DonorProfile.css';
 
+// ─── Icons ────────────────────────────────────────────────────────────────────
+
+const PencilIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="12" height="12">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+const OrgIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <rect x="2" y="7" width="20" height="14" rx="2" />
+        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" strokeLinecap="round" />
+    </svg>
+);
+
+const TagIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+        <line x1="7" y1="7" x2="7.01" y2="7" strokeLinecap="round" strokeWidth="2.5" />
+    </svg>
+);
+
+const PersonIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round" />
+        <circle cx="12" cy="7" r="4" />
+    </svg>
+);
+
+const PhoneIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.72h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.32a16 16 0 0 0 6 6l1.27-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" strokeLinecap="round" />
+    </svg>
+);
+
+const LocationIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+        <circle cx="12" cy="10" r="3" />
+    </svg>
+);
+
+const ShieldIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="10" height="10">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+);
+
 // ─── Org-type badge color map ────────────────────────────────────────────────
 
 const orgTypeBadgeClass = (type: string): string => {
@@ -169,19 +218,34 @@ const DonorProfile: React.FC = () => {
                     <p>Manage your account details</p>
                 </div>
                 <div className="dp-layout">
-                    <div className="dp-skeleton-card">
-                        <div className="dp-skeleton-circle" />
-                        <div className="dp-skeleton-line" style={{ width: '60%', margin: '0 auto 0.75rem' }} />
-                        <div className="dp-skeleton-line" style={{ width: '80%', margin: '0 auto 0.75rem' }} />
-                        <div className="dp-skeleton-line" style={{ width: '40%', margin: '0 auto' }} />
+                    <div className="dp-skeleton-card" style={{ padding: 0 }}>
+                        <div className="dp-skeleton-banner" />
+                        <div className="dp-skeleton-body">
+                            <div className="dp-skeleton-circle" />
+                            <div className="dp-skeleton-line" style={{ width: '55%', margin: '1rem auto 0.6rem' }} />
+                            <div className="dp-skeleton-line" style={{ width: '72%', margin: '0 auto 1rem' }} />
+                            <div className="dp-skeleton-line" style={{ width: '35%', margin: '0 auto' }} />
+                        </div>
                     </div>
-                    <div className="dp-skeleton-card">
-                        <div className="dp-skeleton-line" style={{ width: '30%', marginBottom: '1.5rem' }} />
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="dp-skeleton-card" style={{ padding: 0 }}>
+                        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid #E4E1DC' }}>
+                            <div className="dp-skeleton-line" style={{ width: '30%', height: '14px' }} />
+                        </div>
+                        <div>
                             {[...Array(6)].map((_, i) => (
-                                <div key={i}>
-                                    <div className="dp-skeleton-line" style={{ width: '40%', marginBottom: '0.5rem', height: '10px' }} />
-                                    <div className="dp-skeleton-line" style={{ width: '75%' }} />
+                                <div
+                                    key={i}
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        padding: '1rem 1.5rem',
+                                        borderBottom: i < 5 ? '1px solid #E4E1DC' : 'none',
+                                        gap: '1rem',
+                                    }}
+                                >
+                                    <div className="dp-skeleton-line" style={{ width: '22%', height: '10px' }} />
+                                    <div className="dp-skeleton-line" style={{ width: '40%' }} />
                                 </div>
                             ))}
                         </div>
@@ -220,24 +284,35 @@ const DonorProfile: React.FC = () => {
             <div className="dp-layout">
                 {/* ── Left: Avatar Card ─────────────── */}
                 <div className="dp-avatar-card">
-                    <div className="dp-avatar">{getInitials(profile.fullName)}</div>
-                    <h2 className="dp-avatar-name">{profile.fullName}</h2>
-                    <p className="dp-avatar-email">{profile.email}</p>
-                    <span className="dp-role-badge">Donor</span>
-                    {user?.createdAt && (
-                        <p className="dp-joined">Joined {formatDate(user.createdAt)}</p>
-                    )}
+                    <div className="dp-avatar-banner" />
 
-                    <div className="dp-stats-row">
-                        <div className="dp-stat-item">
-                            <span className="dp-stat-value">{stats?.total ?? 0}</span>
-                            <span className="dp-stat-label">Total Listings</span>
+                    <div className="dp-avatar-body">
+                        <div className="dp-avatar">{getInitials(profile.fullName)}</div>
+                        <h2 className="dp-avatar-name">{profile.fullName}</h2>
+                        <p className="dp-avatar-email">{profile.email}</p>
+                        <span className="dp-role-badge">Donor</span>
+                        {user?.createdAt && (
+                            <p className="dp-joined">Joined {formatDate(user.createdAt)}</p>
+                        )}
+
+                        <div className="dp-stats-row">
+                            {[
+                                { value: stats?.total ?? 0, label: 'Total' },
+                                { value: stats?.active ?? 0, label: 'Active' },
+                                { value: stats?.claimed ?? 0, label: 'Claimed' },
+                                { value: stats?.mealsShared ?? 0, label: 'Meals' },
+                            ].map(({ value, label }) => (
+                                <div key={label} className="dp-stat-item">
+                                    <span className="dp-stat-value">{value}</span>
+                                    <span className="dp-stat-label">{label}</span>
+                                </div>
+                            ))}
                         </div>
-                    </div>
 
-                    <button className="dp-signout-btn" onClick={handleSignOut}>
-                        Sign Out
-                    </button>
+                        <button className="dp-signout-btn" onClick={handleSignOut}>
+                            Sign Out
+                        </button>
+                    </div>
                 </div>
 
                 {/* ── Right: Details Card ───────────── */}
@@ -246,7 +321,7 @@ const DonorProfile: React.FC = () => {
                         <h2>{editing ? 'Edit Profile' : 'Profile Details'}</h2>
                         {!editing && (
                             <button className="dp-edit-btn" onClick={enterEditMode}>
-                                Edit Profile
+                                <PencilIcon /> Edit Profile
                             </button>
                         )}
                     </div>
@@ -353,39 +428,39 @@ const DonorProfile: React.FC = () => {
                         /* ── View Mode ──────────────── */
                         <div className="dp-view-grid">
                             <div className="dp-field">
-                                <span className="dp-field-label">Organization</span>
+                                <span className="dp-field-label"><OrgIcon /> Organization</span>
                                 <span className="dp-field-value">
                                     {profile.organizationName || <span className="dp-muted">Not set</span>}
                                 </span>
                             </div>
                             <div className="dp-field">
-                                <span className="dp-field-label">Type</span>
+                                <span className="dp-field-label"><TagIcon /> Type</span>
                                 <span className={`dp-badge ${orgTypeBadgeClass(profile.organizationType)}`}>
                                     {profile.organizationType}
                                 </span>
                             </div>
                             <div className="dp-field">
-                                <span className="dp-field-label">Contact Person</span>
+                                <span className="dp-field-label"><PersonIcon /> Contact Person</span>
                                 <span className={`dp-field-value ${!profile.contactPerson ? 'dp-muted' : ''}`}>
                                     {profile.contactPerson || 'Not set'}
                                 </span>
                             </div>
                             <div className="dp-field">
-                                <span className="dp-field-label">Phone</span>
+                                <span className="dp-field-label"><PhoneIcon /> Phone</span>
                                 <span className={`dp-field-value ${!profile.phone ? 'dp-muted' : ''}`}>
                                     {profile.phone || 'Not set'}
                                 </span>
                             </div>
                             <div className="dp-field">
-                                <span className="dp-field-label">Address</span>
+                                <span className="dp-field-label"><LocationIcon /> Address</span>
                                 <span className={`dp-field-value ${!profile.address ? 'dp-muted' : ''}`}>
                                     {profile.address || 'Not set'}
                                 </span>
                             </div>
                             <div className="dp-field">
-                                <span className="dp-field-label">Verified</span>
+                                <span className="dp-field-label"><ShieldIcon /> Verified</span>
                                 {profile.isVerified ? (
-                                    <span className="dp-verified-badge dp-verified-badge--yes">Verified</span>
+                                    <span className="dp-verified-badge dp-verified-badge--yes">✓ Verified</span>
                                 ) : (
                                     <span className="dp-verified-badge dp-verified-badge--no">Pending</span>
                                 )}

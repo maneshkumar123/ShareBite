@@ -100,17 +100,22 @@
     background-color: #121212;
     padding: clamp(80px, 10vh, 120px) clamp(16px, 4vw, 48px) clamp(40px, 6vh, 80px);
     box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+    color-scheme: dark;
+    /* Prevent horizontal scroll */
 }
 
 .register-container {
     display: grid;
     grid-template-columns: 1fr 1.3fr;
-    /* Right side wider for form */
     gap: clamp(2rem, 4vw, 5rem);
     max-width: 1200px;
+    /* Match Hero max-width */
     width: 100%;
     margin: 0 auto;
     align-items: center;
+    box-sizing: border-box;
 }
 
 /* ==============================================
@@ -159,7 +164,7 @@
 }
 
 .register-title-line {
-    font-family: 'Inter', 'Inter Display', sans-serif;
+    font-family: var(--font-family-display);
     font-size: clamp(32px, 4.5vw, 60px);
     font-weight: 500;
     color: #F7F7F7;
@@ -212,7 +217,7 @@
 }
 
 .register-subtitle {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: clamp(13px, 1vw, 16px);
     font-weight: 400;
     color: #777777;
@@ -270,7 +275,7 @@
 }
 
 .register-card-title {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: clamp(20px, 1.8vw, 24px);
     font-weight: 600;
     letter-spacing: -0.02em;
@@ -280,7 +285,7 @@
 }
 
 .register-card-subtitle {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: 13px;
     font-weight: 400;
     color: #666666;
@@ -351,7 +356,7 @@
     padding: clamp(13px, 1.3vw, 15px) 24px;
     background: linear-gradient(135deg, #7DFF12 0%, #6eeb00 100%);
     color: #121212;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: 14px;
     font-weight: 600;
     letter-spacing: 0.02em;
@@ -422,7 +427,7 @@
     border-radius: 10px;
     padding: 10px 14px;
     color: #EF4444;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -431,7 +436,7 @@
 /* Login link */
 .register-login-link {
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-family);
     font-size: 13px;
     color: #777777;
     margin: 1rem 0 0;
@@ -506,19 +511,37 @@
     }
 
     .register-card {
-        padding: 20px 18px;
+        padding: 24px 20px;
         border-radius: 20px;
+    }
+
+    .register-card-title {
+        font-size: 24px;
+    }
+
+    .register-card-subtitle {
+        font-size: 13px;
     }
 
     /* Stack to single column on mobile */
     .register-form-grid {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
     }
 
     .register-field-wrapper.half-width,
     .register-field-wrapper.full-width {
         grid-column: span 1;
+    }
+
+    .register-submit-btn {
+        padding: 14px 24px;
+        font-size: 15px;
+        margin-top: 16px;
+    }
+
+    .register-login-link {
+        font-size: 13px;
     }
 }
 
@@ -529,9 +552,38 @@
     }
 
     .register-card {
-        padding: 18px 14px;
+        padding: 20px 16px;
         border-radius: 16px;
     }
+
+    .register-card-title {
+        font-size: 22px;
+    }
+
+    .register-submit-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+/* ==============================================
+   FORM FIELD OVERRIDES
+   Force dark-theme colors for form fields.
+   Higher specificity (2 classes) beats FormField.css (1 class)
+   and overrides the global color-scheme:light from index.css.
+   ============================================== */
+
+.register-page .form-field-label {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.register-page .form-field-input {
+    color: #F7F7F7;
+    background-color: rgba(255, 255, 255, 0.07);
+}
+
+.register-page .form-field-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
 }
 
 /* ==============================================

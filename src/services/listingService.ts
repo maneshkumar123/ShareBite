@@ -30,6 +30,10 @@ export interface ListingDetail {
     donorOrgType: string;
     createdAt: string;
     claimedAt: string | null;
+    lat: number | null;
+    lng: number | null;
+    contactPerson: string | null;
+    donorPhone: string | null;
 }
 
 export interface DonorStats {
@@ -55,6 +59,21 @@ export interface RecipientStats {
     totalClaimed: number;
     mealsReceived: number;
     nearbyCount: number;
+}
+
+export interface EnhancedListing {
+    id: string;
+    title: string;
+    description: string;
+    quantity: number;
+    quantityUnit: string;
+    expiryTime: string;
+    address: string;
+    imageUrl: string | null;
+    donorName: string;
+    lat: number | null;
+    lng: number | null;
+    distanceM: number | null;
 }
 
 export interface NearbyListing {
@@ -338,26 +357,56 @@ export const listingService = {
     },
 
     /**
+     * Get listings with real PostGIS distance via RPC.
+     * p_radius_m = null → all available listings (sorted by distance if location provided)
+     * p_radius_m = number → only listings within that radius
+     */
+    getListingsWithDistance: async (
+        userLat: number | null,
+        userLng: number | null,
+        radiusMeters: number | null = null,
+        limit = 50
+    ): Promise<ApiResponse<EnhancedListing[]>> => {
+        return apiRequest(async () => {
+            const { data, error } = await supabase.rpc('get_listings_with_distance', {
+                p_lat: userLat,
+                p_lng: userLng,
+                p_radius_m: radiusMeters,
+                p_limit: limit,
+            });
+            if (error) throw error;
+            return (data ?? []).map((row: {
+                id: string; title: string; description: string | null;
+                quantity: number; quantity_unit: string; expiry_time: string;
+                address: string | null; image_url: string | null; donor_name: string;
+                lat: number | null; lng: number | null; distance_m: number | null;
+            }) => ({
+                id: row.id,
+                title: row.title,
+                description: row.description ?? '',
+                quantity: row.quantity,
+                quantityUnit: row.quantity_unit,
+                expiryTime: row.expiry_time,
+                address: row.address ?? '',
+                imageUrl: row.image_url ?? null,
+                donorName: row.donor_name ?? 'Donor',
+                lat: row.lat ?? null,
+                lng: row.lng ?? null,
+                distanceM: row.distance_m ?? null,
+            }));
+        });
+    },
+
+    /**
      * Get full listing details by ID
      */
     getListingById: async (id: string): Promise<ApiResponse<ListingDetail>> => {
         return apiRequest(async () => {
             const { data, error } = await supabase
-                .from('food_listings')
-                .select(`
-                    id, title, description, quantity, quantity_unit,
-                    image_url, expiry_time, address, status,
-                    donor_id, created_at, claimed_at,
-                    profiles!donor_id ( full_name ),
-                    donor_profiles!id ( organization_name, organization_type )
-                `)
-                .eq('id', id)
-                .single();
+                .rpc('get_listing_detail', { p_listing_id: id });
 
             if (error) throw error;
-
-            const profile = Array.isArray(data.profiles) ? data.profiles[0] : data.profiles;
-            const donorProfile = Array.isArray(data.donor_profiles) ? data.donor_profiles[0] : data.donor_profiles;
+            if (!data) throw new Error('Listing not found');
 
             return {
                 id: data.id,
@@ -367,13 +416,17 @@ export const listingService = {
                 quantityUnit: data.quantity_unit,
                 imageUrl: data.image_url ?? null,
                 expiryTime: data.expiry_time,
-                address: data.address,
+                address: data.address ?? '',
                 status: data.status as 'available' | 'claimed' | 'expired',
                 donorId: data.donor_id,
-                donorName: donorProfile?.organization_name ?? profile?.full_name ?? 'Donor',
-                donorOrgType: donorProfile?.organization_type ?? 'other',
+                donorName: data.donor_name ?? 'Donor',
+                donorOrgType: data.donor_org_type ?? 'other',
                 createdAt: data.created_at,
                 claimedAt: data.claimed_at ?? null,
+                lat: data.lat ?? null,
+                lng: data.lng ?? null,
+                contactPerson: data.contact_person ?? null,
+                donorPhone: data.donor_phone ?? null,
             };
         });
     },

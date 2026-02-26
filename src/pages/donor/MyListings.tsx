@@ -316,24 +316,32 @@ const MyListings: React.FC = () => {
                                         <span className={`ml-card-expiry ${expiry.cls}`}>{expiry.text}</span>
                                         <span className="ml-card-time">{formatTimeAgo(listing.createdAt)}</span>
                                     </div>
-                                    {canEdit && (
-                                        <div className="ml-actions">
-                                            <button
-                                                className="ml-action-btn"
-                                                onClick={() => setEditListing(listing)}
-                                                aria-label="Edit listing"
-                                            >
-                                                <EditIcon />
-                                            </button>
-                                            <button
-                                                className="ml-action-btn ml-action-btn--delete"
-                                                onClick={() => setDeleteId(listing.id)}
-                                                aria-label="Delete listing"
-                                            >
-                                                <TrashIcon />
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div className="ml-actions">
+                                        <Link to={`/listing/${listing.id}`} className="ml-action-btn ml-action-btn--view" aria-label="View listing">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </Link>
+                                        {canEdit && (
+                                            <>
+                                                <button
+                                                    className="ml-action-btn"
+                                                    onClick={() => setEditListing(listing)}
+                                                    aria-label="Edit listing"
+                                                >
+                                                    <EditIcon />
+                                                </button>
+                                                <button
+                                                    className="ml-action-btn ml-action-btn--delete"
+                                                    onClick={() => setDeleteId(listing.id)}
+                                                    aria-label="Delete listing"
+                                                >
+                                                    <TrashIcon />
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         );

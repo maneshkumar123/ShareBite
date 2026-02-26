@@ -276,13 +276,9 @@ const RegisterPage: React.FC = () => {
             });
 
             if (response.success) {
-                // Navigate to success page
-                navigate('/auth/success', {
-                    state: {
-                        role: selectedRole,
-                        email: formData.email,
-                        name: formData.fullName,
-                    }
+                // Navigate to email verification page
+                navigate(ROUTES.VERIFY_EMAIL, {
+                    state: { email: formData.email },
                 });
             } else {
                 setErrors({ submit: response.error || 'Registration failed. Please try again.' });

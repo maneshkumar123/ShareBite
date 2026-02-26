@@ -35,29 +35,36 @@ const formatExpiry = (iso: string) => {
     return `${Math.floor(hrs / 24)}d left`;
 };
 
+const getExpiryUrgency = (iso: string): 'expired' | 'urgent' | 'normal' => {
+    const diff = new Date(iso).getTime() - Date.now();
+    if (diff < 0) return 'expired';
+    if (diff < 3600000) return 'urgent';
+    return 'normal';
+};
+
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
 const TotalIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
         <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
     </svg>
 );
 
 const ActiveIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <circle cx="12" cy="12" r="9" /><path d="M12 6v6l4 2" strokeLinecap="round" />
     </svg>
 );
 
 const ClaimedIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
         <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const MealsIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="18" height="18">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="28" height="28">
         <path d="M18 8h1a4 4 0 0 1 0 8h-1" strokeLinecap="round" />
         <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
         <line x1="6" y1="1" x2="6" y2="4" strokeLinecap="round" />
@@ -66,10 +73,30 @@ const MealsIcon = () => (
     </svg>
 );
 
-const PlusIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+const PlusIcon = ({ size = 18 }: { size?: number }) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width={size} height={size}>
         <line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" />
         <line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" />
+    </svg>
+);
+
+const TrendUpIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline points="17 6 23 6 23 12" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+);
+
+const ClockIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="14" height="14">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" strokeLinecap="round" />
+    </svg>
+);
+
+const ChevronRight = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+        <polyline points="9 18 15 12 9 6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -84,6 +111,42 @@ const StatusPill: React.FC<{ status: 'available' | 'claimed' | 'expired' }> = ({
     const { label, cls } = map[status];
     return <span className={`status-pill ${cls}`}><span className="pill-dot" />{label}</span>;
 };
+
+// ─── Skeleton Components ──────────────────────────────────────────────────────
+
+const StatStripSkeleton = () => (
+    <div className="dd__stat-strip dd__stat-strip--skeleton">
+        {[...Array(4)].map((_, i) => (
+            <div key={i} className="dd__stat-item">
+                <div className="dd__skel-line dd__skel-line--xl" />
+                <div className="dd__skel-line dd__skel-line--sm" style={{ marginTop: '0.5rem' }} />
+            </div>
+        ))}
+    </div>
+);
+
+const ListingCardSkeleton = () => (
+    <div className="dd__listing-card dd__listing-card--skeleton">
+        <div className="dd__listing-card-top">
+            <div className="dd__skel-line dd__skel-line--lg" />
+            <div className="dd__skel-pill" />
+        </div>
+        <div className="dd__listing-card-details">
+            <div className="dd__skel-line dd__skel-line--md" />
+            <div className="dd__skel-line dd__skel-line--sm" />
+        </div>
+    </div>
+);
+
+const TableRowSkeleton = () => (
+    <tr className="dd__table-row dd__table-row--skeleton">
+        <td><div className="dd__skel-line dd__skel-line--lg" /></td>
+        <td><div className="dd__skel-pill" /></td>
+        <td><div className="dd__skel-line dd__skel-line--sm" /></td>
+        <td><div className="dd__skel-line dd__skel-line--sm" /></td>
+        <td><div className="dd__skel-line dd__skel-line--sm" /></td>
+    </tr>
+);
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -112,87 +175,167 @@ const DonorDashboard: React.FC = () => {
 
     const firstName = user?.fullName?.split(' ')[0] || 'there';
     const orgName = user?.donorProfile?.organizationName;
+    const todayLabel = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
     return (
         <div className="dd">
-            {/* ── Header Bar ───────────────────────────────────── */}
+            {/* ── Header ───────────────────────────────────────── */}
             <div className="dd__topbar">
                 <div className="dd__topbar-left">
-                    <h1 className="dd__greeting">{greeting()}, {firstName}</h1>
+                    <p className="dd__greeting-pre">{greeting()}</p>
+                    <h1 className="dd__greeting">{firstName}</h1>
                     {orgName && <p className="dd__org">{orgName}</p>}
                 </div>
-                <Link to={ROUTES.CREATE_LISTING} className="dd__post-btn">
-                    <PlusIcon /> Post Food
-                </Link>
+                <div className="dd__topbar-right">
+                    <span className="dd__date">{todayLabel}</span>
+                    <Link to={ROUTES.CREATE_LISTING} className="dd__post-btn" aria-label="Post food listing">
+                        <PlusIcon size={14} /> <span>Post Listing</span>
+                    </Link>
+                </div>
             </div>
 
-            {/* ── Stats Grid ───────────────────────────────────── */}
-            <div className="dd__stats">
-                {[
-                    { icon: <TotalIcon />, value: isLoading ? '\u2014' : stats.total, label: 'Total Listings', color: 'default', delay: '0ms' },
-                    { icon: <ActiveIcon />, value: isLoading ? '\u2014' : stats.active, label: 'Active Now', color: 'green', delay: '60ms' },
-                    { icon: <ClaimedIcon />, value: isLoading ? '\u2014' : stats.claimed, label: 'Claimed', color: 'amber', delay: '120ms' },
-                    { icon: <MealsIcon />, value: isLoading ? '\u2014' : stats.mealsShared, label: 'Meals Shared', color: 'blue', delay: '180ms' },
-                ].map(({ icon, value, label, color, delay }) => (
-                    <div key={label} className={`dd__stat-card dd__stat-card--${color}`} style={{ animationDelay: delay }}>
-                        <div className="dd__stat-icon">{icon}</div>
-                        <div className="dd__stat-value">{value}</div>
-                        <div className="dd__stat-label">{label}</div>
+            {/* ── Stats Strip ──────────────────────────────────── */}
+            <section className="dd__stats" aria-label="Key metrics">
+                {isLoading ? <StatStripSkeleton /> : (
+                    <div className="dd__stat-strip">
+                        {[
+                            { value: stats.mealsShared, label: 'Meals Shared', accent: false },
+                            { value: stats.total,       label: 'Total Listings', accent: false },
+                            { value: stats.active,      label: 'Active Now',    accent: true  },
+                            { value: stats.claimed,     label: 'Claimed',       accent: false },
+                        ].map(({ value, label, accent }, i) => (
+                            <div key={label} className={`dd__stat-item${accent ? ' dd__stat-item--accent' : ''}`}
+                                 style={{ animationDelay: `${i * 60}ms` }}>
+                                <span className="dd__stat-num">{value}</span>
+                                <span className="dd__stat-lbl">{label}</span>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                )}
+            </section>
 
-            {/* ── Listings Table ───────────────────────────────── */}
-            <div className="dd__section">
+            {/* ── LAYER 2: Recent Listings ─────────────────────── */}
+            <section className="dd__section" aria-label="Recent listings">
                 <div className="dd__section-header">
                     <h2 className="dd__section-title">Recent Listings</h2>
-                    <Link to="/donor/listings" className="dd__section-link">View all &rarr;</Link>
+                    <Link to="/donor/listings" className="dd__section-link">
+                        View all <ChevronRight />
+                    </Link>
                 </div>
 
                 {isLoading ? (
-                    <div className="dd__loading">
-                        {[...Array(3)].map((_, i) => (
-                            <div key={i} className="dd__skeleton" style={{ animationDelay: `${i * 100}ms` }} />
-                        ))}
-                    </div>
+                    <>
+                        {/* Mobile: Card skeletons */}
+                        <div className="dd__listings-cards">
+                            {[...Array(3)].map((_, i) => <ListingCardSkeleton key={i} />)}
+                        </div>
+                        {/* Desktop: Table skeletons */}
+                        <div className="dd__table-wrap">
+                            <table className="dd__table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Status</th>
+                                        <th>Quantity</th>
+                                        <th>Expires</th>
+                                        <th>Posted</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[...Array(4)].map((_, i) => <TableRowSkeleton key={i} />)}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
                 ) : listings.length === 0 ? (
                     <div className="dd__empty">
-                        <div className="dd__empty-icon">&#127869;</div>
+                        <div className="dd__empty-icon" aria-hidden="true">
+                            <svg viewBox="0 0 80 80" fill="none" width="80" height="80">
+                                <rect x="8" y="20" width="64" height="44" rx="8" stroke="rgba(125,255,18,0.3)" strokeWidth="2" strokeDasharray="6 4" />
+                                <circle cx="40" cy="42" r="12" stroke="rgba(125,255,18,0.2)" strokeWidth="2" />
+                                <line x1="40" y1="36" x2="40" y2="48" stroke="rgba(125,255,18,0.4)" strokeWidth="2" strokeLinecap="round" />
+                                <line x1="34" y1="42" x2="46" y2="42" stroke="rgba(125,255,18,0.4)" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                        </div>
                         <p className="dd__empty-title">No listings yet</p>
-                        <p className="dd__empty-sub">Post your first surplus food to get started</p>
+                        <p className="dd__empty-sub">Post your first surplus food and start making an impact</p>
                         <Link to={ROUTES.CREATE_LISTING} className="dd__empty-btn">
-                            <PlusIcon /> Create Listing
+                            <PlusIcon size={16} /> Create Your First Listing
                         </Link>
                     </div>
                 ) : (
-                    <div className="dd__table-wrap">
-                        <table className="dd__table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Status</th>
-                                    <th>Quantity</th>
-                                    <th>Expires</th>
-                                    <th>Posted</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {listings.map((l, i) => (
-                                    <tr key={l.id} style={{ animationDelay: `${i * 40}ms` }} className="dd__table-row">
-                                        <td className="dd__table-title">{l.title}</td>
-                                        <td><StatusPill status={l.status} /></td>
-                                        <td className="dd__table-qty">{l.quantity} {l.quantityUnit}</td>
-                                        <td className={`dd__table-expiry ${l.status === 'expired' ? 'dd__table-expiry--expired' : ''}`}>
-                                            {formatExpiry(l.expiryTime)}
-                                        </td>
-                                        <td className="dd__table-time">{formatTimeAgo(l.createdAt)}</td>
+                    <>
+                        {/* Mobile: Card Stack */}
+                        <div className="dd__listings-cards">
+                            {listings.map((l, i) => {
+                                const urgency = getExpiryUrgency(l.expiryTime);
+                                return (
+                                    <div key={l.id} className="dd__listing-card" style={{ animationDelay: `${i * 60}ms` }}>
+                                        <div className="dd__listing-card-top">
+                                            <span className="dd__listing-card-title">{l.title}</span>
+                                            <StatusPill status={l.status} />
+                                        </div>
+                                        <div className="dd__listing-card-details">
+                                            <span className="dd__listing-card-qty">
+                                                {l.quantity} {l.quantityUnit}
+                                            </span>
+                                            <span className="dd__listing-card-divider" aria-hidden="true">·</span>
+                                            <span className={`dd__listing-card-expiry dd__listing-card-expiry--${urgency}`}>
+                                                <ClockIcon /> {formatExpiry(l.expiryTime)}
+                                            </span>
+                                        </div>
+                                        <div className="dd__listing-card-footer">
+                                            <span className="dd__listing-card-time">{formatTimeAgo(l.createdAt)}</span>
+                                            <Link to={`/listing/${l.id}`} className="dd__listing-card-view-link">View</Link>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Tablet+: Table */}
+                        <div className="dd__table-wrap">
+                            <table className="dd__table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th>Status</th>
+                                        <th>Quantity</th>
+                                        <th>Expires</th>
+                                        <th>Posted</th>
+                                        <th></th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {listings.map((l, i) => (
+                                        <tr key={l.id} style={{ animationDelay: `${i * 40}ms` }} className="dd__table-row">
+                                            <td className="dd__table-title">{l.title}</td>
+                                            <td><StatusPill status={l.status} /></td>
+                                            <td className="dd__table-qty">{l.quantity} {l.quantityUnit}</td>
+                                            <td className={`dd__table-expiry dd__table-expiry--${getExpiryUrgency(l.expiryTime)}`}>
+                                                {formatExpiry(l.expiryTime)}
+                                            </td>
+                                            <td className="dd__table-time">{formatTimeAgo(l.createdAt)}</td>
+                                            <td>
+                                                <Link to={`/listing/${l.id}`} className="dd__table-view-link">View</Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </>
                 )}
-            </div>
+            </section>
+
+            {/* ── FAB: Mobile-only floating action button ──────── */}
+            <Link
+                to={ROUTES.CREATE_LISTING}
+                className="dd__fab"
+                aria-label="Post new food listing"
+            >
+                <PlusIcon size={24} />
+            </Link>
         </div>
     );
 };
