@@ -44,46 +44,10 @@ const getExpiryUrgency = (iso: string): 'expired' | 'urgent' | 'normal' => {
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
-const TotalIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
-        <rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" />
-        <rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" />
-    </svg>
-);
-
-const ActiveIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
-        <circle cx="12" cy="12" r="9" /><path d="M12 6v6l4 2" strokeLinecap="round" />
-    </svg>
-);
-
-const ClaimedIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="22" height="22">
-        <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-);
-
-const MealsIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" width="28" height="28">
-        <path d="M18 8h1a4 4 0 0 1 0 8h-1" strokeLinecap="round" />
-        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
-        <line x1="6" y1="1" x2="6" y2="4" strokeLinecap="round" />
-        <line x1="10" y1="1" x2="10" y2="4" strokeLinecap="round" />
-        <line x1="14" y1="1" x2="14" y2="4" strokeLinecap="round" />
-    </svg>
-);
-
 const PlusIcon = ({ size = 18 }: { size?: number }) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width={size} height={size}>
         <line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" />
         <line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" />
-    </svg>
-);
-
-const TrendUpIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14">
-        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" strokeLinecap="round" strokeLinejoin="round" />
-        <polyline points="17 6 23 6 23 12" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
@@ -200,12 +164,12 @@ const DonorDashboard: React.FC = () => {
                     <div className="dd__stat-strip">
                         {[
                             { value: stats.mealsShared, label: 'Meals Shared', accent: false },
-                            { value: stats.total,       label: 'Total Listings', accent: false },
-                            { value: stats.active,      label: 'Active Now',    accent: true  },
-                            { value: stats.claimed,     label: 'Claimed',       accent: false },
+                            { value: stats.total, label: 'Total Listings', accent: false },
+                            { value: stats.active, label: 'Active Now', accent: true },
+                            { value: stats.claimed, label: 'Claimed', accent: false },
                         ].map(({ value, label, accent }, i) => (
                             <div key={label} className={`dd__stat-item${accent ? ' dd__stat-item--accent' : ''}`}
-                                 style={{ animationDelay: `${i * 60}ms` }}>
+                                style={{ animationDelay: `${i * 60}ms` }}>
                                 <span className="dd__stat-num">{value}</span>
                                 <span className="dd__stat-lbl">{label}</span>
                             </div>

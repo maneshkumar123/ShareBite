@@ -73,31 +73,19 @@ const IconX = () => (
     </svg>
 );
 
-/* Brand mark: share-icon (3 nodes + 2 connecting lines) in a lime-green tile */
-const BrandMark = () => (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-        <rect width="28" height="28" rx="7" fill="#7DFF12" />
-        <circle cx="9"  cy="14"   r="2.25" fill="#0B0B0B" />
-        <circle cx="19" cy="8.5"  r="2.25" fill="#0B0B0B" />
-        <circle cx="19" cy="19.5" r="2.25" fill="#0B0B0B" />
-        <line x1="11.1" y1="13.1" x2="16.9" y2="9.5"  stroke="#0B0B0B" strokeWidth="1.6" strokeLinecap="round" />
-        <line x1="11.1" y1="14.9" x2="16.9" y2="18.5" stroke="#0B0B0B" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-);
-
 // ─── Nav data ─────────────────────────────────────────────────────────────────
 
 const DONOR_NAV: NavItem[] = [
-    { path: ROUTES.DONOR_DASHBOARD, label: 'Dashboard',     icon: <IconGrid /> },
-    { path: ROUTES.CREATE_LISTING,  label: 'New Listing',   icon: <IconPlus /> },
-    { path: ROUTES.MY_LISTINGS,     label: 'My Listings',   icon: <IconList /> },
-    { path: ROUTES.PROFILE,         label: 'Profile',       icon: <IconUser /> },
+    { path: ROUTES.DONOR_DASHBOARD, label: 'Dashboard', icon: <IconGrid /> },
+    { path: ROUTES.CREATE_LISTING, label: 'New Listing', icon: <IconPlus /> },
+    { path: ROUTES.MY_LISTINGS, label: 'My Listings', icon: <IconList /> },
+    { path: ROUTES.PROFILE, label: 'Profile', icon: <IconUser /> },
 ];
 
 const RECIPIENT_NAV: NavItem[] = [
-    { path: ROUTES.RECIPIENT_DASHBOARD, label: 'Dashboard',  icon: <IconGrid />   },
-    { path: ROUTES.BROWSE_LISTINGS,     label: 'Browse Food', icon: <IconSearch /> },
-    { path: ROUTES.RECIPIENT_PROFILE,   label: 'Profile',    icon: <IconUser />   },
+    { path: ROUTES.RECIPIENT_DASHBOARD, label: 'Dashboard', icon: <IconGrid /> },
+    { path: ROUTES.BROWSE_LISTINGS, label: 'Browse Food', icon: <IconSearch /> },
+    { path: ROUTES.RECIPIENT_PROFILE, label: 'Profile', icon: <IconUser /> },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
