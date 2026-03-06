@@ -151,7 +151,13 @@ export const ClaimRequestChat: React.FC<ClaimRequestChatProps> = ({
             {/* Accepted Banner (recipient) */}
             {isAccepted && userRole === 'recipient' && detail.donorPhone && (
                 <div className="crc-accepted-banner">
-                    <span>Accepted — contact the donor to arrange pickup</span>
+                    <span>
+                        <svg className="crc-accepted-banner-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'inline', verticalAlign: '-2px' }}>
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="9 12 11.5 14.5 16 9.5" />
+                        </svg>
+                        {' '}Accepted — contact the donor to arrange pickup
+                    </span>
                     <a href={`tel:${detail.donorPhone}`} className="crc-phone-link">{detail.donorPhone}</a>
                 </div>
             )}
@@ -177,7 +183,7 @@ export const ClaimRequestChat: React.FC<ClaimRequestChatProps> = ({
                     messages.map(msg => {
                         const isOwn = msg.senderId === currentUserId;
                         return (
-                            <div key={msg.id} className={`crc-msg ${isOwn ? 'crc-msg--own' : 'crc-msg--other'}`}>
+                            <div key={msg.id} className={`crc-msg ${isOwn ? 'crc-msg--own' : 'crc-msg--other'} crc-msg-enter`}>
                                 {!isOwn && <p className="crc-msg-sender">{msg.senderName}</p>}
                                 <div className="crc-msg-bubble">{msg.body}</div>
                                 <p className="crc-msg-time">{formatTime(msg.createdAt)}</p>
@@ -206,7 +212,13 @@ export const ClaimRequestChat: React.FC<ClaimRequestChatProps> = ({
                         }}
                     />
                     <button className="crc-send-btn" onClick={handleSend} disabled={sending || !sendText.trim()}>
-                        {sending ? '...' : '\u2191'}
+                        {sending ? '...' : (
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12 16 12 8" />
+                                <polyline points="8 12 12 8 16 12" />
+                            </svg>
+                        )}
                     </button>
                 </div>
             ) : (

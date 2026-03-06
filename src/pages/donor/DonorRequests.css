@@ -1,40 +1,111 @@
+/* ================================================================
+   DonorRequests — Production Design (Light Theme)
+   Uses design-tokens.css variables throughout
+   ================================================================ */
+
+/* ── Page ──────────────────────────────────────────────── */
 .dreq-page {
     height: 100%;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    background: var(--color-bg-primary);
+    font-family: var(--font-family);
+    animation: dreq-page-enter 0.4s ease both;
 }
 
+@keyframes dreq-page-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ────────────────────────────────────────────── */
 .dreq-header {
-    padding: 1.5rem 1.5rem 1rem;
+    padding: 2rem 2.5rem 1.25rem;
     flex-shrink: 0;
-    border-bottom: 1px solid rgba(255,255,255,0.07);
+    border-bottom: 1px solid var(--color-border);
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 1rem;
 }
-.dreq-header h1 { font-size: 1.5rem; font-weight: 700; color: #F7F7F7; margin: 0 0 0.25rem; }
-.dreq-subtitle { font-size: 0.875rem; color: #888; margin: 0; }
 
-.dreq-tabs { display: flex; gap: 0.5rem; }
+.dreq-header-left h1 {
+    font-family: var(--font-family-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.02em;
+}
+
+.dreq-subtitle {
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* ── Filter Tabs ───────────────────────────────────────── */
+.dreq-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
 .dreq-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    color: #888;
+    border-radius: var(--radius-full);
+    font-family: var(--font-family-mono);
+    font-size: 0.78rem;
+    font-weight: var(--font-weight-semibold);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
     cursor: pointer;
-    transition: all 0.15s;
-}
-.dreq-tab--active {
-    background: rgba(125,255,18,0.12);
-    border-color: rgba(125,255,18,0.3);
-    color: #7DFF12;
+    transition: all var(--transition-fast);
+    letter-spacing: 0.02em;
 }
 
+.dreq-tab:hover {
+    border-color: var(--color-border-hover);
+    color: var(--color-text-primary);
+    background: var(--color-bg-hover);
+}
+
+.dreq-tab--active {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #0B0B0B;
+}
+
+.dreq-tab--active:hover {
+    background: var(--color-accent-light);
+    border-color: var(--color-accent-light);
+    color: #0B0B0B;
+}
+
+.dreq-tab-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dreq-tab-dot--pending {
+    background: var(--color-warning);
+}
+
+.dreq-tab--active .dreq-tab-dot--pending {
+    background: #0B0B0B;
+}
+
+/* ── Layout: List + Chat ───────────────────────────────── */
 .dreq-layout {
     display: flex;
     flex: 1;
@@ -42,108 +113,410 @@
     overflow: hidden;
 }
 
+/* ── List Panel ────────────────────────────────────────── */
 .dreq-list-panel {
-    width: 320px;
+    width: 360px;
     flex-shrink: 0;
-    border-right: 1px solid rgba(255,255,255,0.07);
+    border-right: 1px solid var(--color-border);
     overflow-y: auto;
     padding: 0.75rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    background: var(--color-bg-primary);
 }
 
+/* Custom scrollbar */
+.dreq-list-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dreq-list-panel::-webkit-scrollbar-track {
+    background: var(--color-bg-tertiary);
+    border-radius: 3px;
+}
+
+.dreq-list-panel::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 3px;
+}
+
+.dreq-list-panel::-webkit-scrollbar-thumb:hover {
+    background: var(--color-accent-light);
+}
+
+/* ── Chat Panel ────────────────────────────────────────── */
 .dreq-chat-panel {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
     min-height: 0;
+    background: var(--color-bg-secondary);
+    border-left: 1px solid var(--color-border);
+    margin-left: -1px;
 }
 
-/* Group label */
-.dreq-group { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 0.75rem; }
+/* ── Group Label ───────────────────────────────────────── */
+.dreq-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.75rem;
+}
+
+.dreq-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+}
+
 .dreq-group-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #555;
+    font-family: var(--font-family-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0 0.25rem;
+    letter-spacing: 0.06em;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Request card */
+.dreq-group-count {
+    font-family: var(--font-family-mono);
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-accent-dark);
+    background: var(--color-accent-subtle);
+    padding: 0.1rem 0.45rem;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+    line-height: 1.4;
+}
+
+/* ── Request Card ──────────────────────────────────────── */
 .dreq-card {
     width: 100%;
     text-align: left;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 12px;
-    padding: 0.875rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid transparent;
+    border-radius: var(--radius-md);
+    padding: 0.875rem 0.875rem 0.875rem 0.75rem;
     cursor: pointer;
-    transition: background 0.15s;
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.35rem;
+    transition:
+        background var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform 0.1s ease;
+    animation: dreq-card-enter 0.35s ease both;
 }
-.dreq-card:hover,
-.dreq-card--active { background: rgba(125,255,18,0.06); border-color: rgba(125,255,18,0.2); }
 
-.dreq-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-.dreq-card-name { font-size: 0.9375rem; font-weight: 600; color: #F7F7F7; }
-.dreq-card-org { font-weight: 400; color: #888; }
-.dreq-unread {
-    min-width: 18px; height: 18px; padding: 0 5px;
-    border-radius: 9px; background: #7DFF12; color: #121212;
-    font-size: 0.6875rem; font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
+@keyframes dreq-card-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.dreq-card:hover {
+    background: var(--color-bg-secondary);
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-border-hover);
+    border-left-color: var(--color-border-hover);
+}
+
+.dreq-card--active {
+    background: var(--color-bg-secondary);
+    border-left-color: var(--color-accent);
+    box-shadow: var(--shadow-md);
+}
+
+.dreq-card--active:hover {
+    border-left-color: var(--color-accent);
+}
+
+/* Card internals */
+.dreq-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.dreq-card-name {
+    font-family: var(--font-family);
+    font-size: 0.9375rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    min-width: 0;
+}
+
+.dreq-card-org {
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dreq-charity-badge {
+    color: var(--color-accent-dark);
     flex-shrink: 0;
 }
-.dreq-card-snippet {
-    font-size: 0.8125rem; color: #666;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;
-}
-.dreq-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
-.dreq-status { font-size: 0.6875rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
-.dreq-status--pending   { background: rgba(245,158,11,0.12); color: #f59e0b; }
-.dreq-status--accepted  { background: rgba(125,255,18,0.12); color: #7DFF12; }
-.dreq-status--rejected,
-.dreq-status--withdrawn { background: rgba(255,255,255,0.06); color: #666; }
-.dreq-time { font-size: 0.6875rem; color: #555; }
 
-/* Empty / loading */
-.dreq-loading { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.dreq-unread {
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-full);
+    background: var(--color-accent);
+    color: #0B0B0B;
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-bold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dreq-card-snippet {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+    line-height: var(--line-height-normal);
+}
+
+.dreq-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.2rem;
+}
+
+/* ── Status Pills with Dot ─────────────────────────────── */
+.dreq-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: var(--font-weight-semibold);
+    padding: 2px 8px 2px 6px;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.02em;
+}
+
+.dreq-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.dreq-status--pending {
+    background: rgba(192, 123, 0, 0.09);
+    color: var(--color-warning);
+}
+.dreq-status--pending .dreq-status-dot {
+    background: var(--color-warning);
+}
+
+.dreq-status--accepted {
+    background: rgba(22, 163, 74, 0.08);
+    color: var(--color-success);
+}
+.dreq-status--accepted .dreq-status-dot {
+    background: var(--color-success);
+}
+
+.dreq-status--rejected,
+.dreq-status--withdrawn {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
+}
+.dreq-status--rejected .dreq-status-dot,
+.dreq-status--withdrawn .dreq-status-dot {
+    background: var(--color-text-muted);
+}
+
+.dreq-time {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+}
+
+/* ── Skeleton Loading ──────────────────────────────────── */
+.dreq-loading {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .dreq-skeleton {
-    height: 80px; border-radius: 12px;
-    background: linear-gradient(90deg, #1e1e1e 0px, #2a2a2a 200px, #1e1e1e 400px);
+    height: 80px;
+    border-radius: var(--radius-md);
+    background: linear-gradient(
+        90deg,
+        var(--color-bg-tertiary) 0px,
+        #FFFFFF 200px,
+        var(--color-bg-tertiary) 400px
+    );
     background-size: 400px;
     animation: dreq-shimmer 1.4s infinite;
 }
-@keyframes dreq-shimmer { to { background-position: 400px 0; } }
-.dreq-empty { padding: 3rem 1.5rem; text-align: center; }
-.dreq-empty-title { font-size: 1rem; font-weight: 600; color: #F7F7F7; margin: 0 0 0.5rem; }
-.dreq-empty-sub { font-size: 0.875rem; color: #666; margin: 0; }
 
-.dreq-empty-chat { flex: 1; display: flex; align-items: center; justify-content: center; }
-.dreq-empty-chat p { font-size: 0.875rem; color: #555; }
+@keyframes dreq-shimmer {
+    to { background-position: 400px 0; }
+}
 
+/* ── Empty State ───────────────────────────────────────── */
+.dreq-empty {
+    padding: 4rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.dreq-empty-icon {
+    color: var(--color-text-muted);
+    opacity: 0.5;
+    margin-bottom: 0.25rem;
+}
+
+.dreq-empty-title {
+    font-family: var(--font-family-display);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin: 0;
+}
+
+.dreq-empty-sub {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 280px;
+    line-height: var(--line-height-relaxed);
+}
+
+/* ── Empty Chat Panel ──────────────────────────────────── */
+.dreq-empty-chat {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dreq-empty-chat-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+}
+
+.dreq-empty-chat-inner p {
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+}
+
+/* ── Back Button (mobile) ──────────────────────────────── */
 .dreq-back-btn {
     display: none;
-    padding: 0.5rem 1rem;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.75rem 1rem;
+    font-family: var(--font-family-mono);
     font-size: 0.8125rem;
-    color: #7DFF12;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-accent-dark);
     background: none;
     border: none;
+    border-bottom: 1px solid var(--color-border);
     cursor: pointer;
     text-align: left;
+    transition: background var(--transition-fast);
+    letter-spacing: 0.02em;
 }
-.dreq-chat-wrap { display: flex; flex-direction: column; height: 100%; }
 
+.dreq-back-btn:hover {
+    background: var(--color-bg-hover);
+}
+
+/* ── Chat Wrap ─────────────────────────────────────────── */
+.dreq-chat-wrap {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* ── Mobile Responsive ─────────────────────────────────── */
 @media (max-width: 768px) {
-    .dreq-list-panel { width: 100%; border-right: none; }
-    .dreq-list-panel--hidden-mobile { display: none; }
-    .dreq-chat-panel { position: absolute; inset: 0; z-index: 5; background: #121212; }
-    .dreq-chat-panel--hidden-mobile { display: none; }
-    .dreq-back-btn { display: block; }
-    .dreq-header { flex-direction: column; gap: 0.75rem; }
+    .dreq-header {
+        padding: 1.25rem 1.25rem 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .dreq-list-panel {
+        width: 100%;
+        border-right: none;
+        transition: opacity var(--transition-fast);
+    }
+
+    .dreq-list-panel--hidden-mobile {
+        display: none;
+    }
+
+    .dreq-chat-panel {
+        position: absolute;
+        inset: 0;
+        z-index: var(--z-overlay);
+        background: var(--color-bg-secondary);
+        border-left: none;
+        margin-left: 0;
+        transition: transform var(--transition-spring);
+    }
+
+    .dreq-chat-panel--hidden-mobile {
+        display: none;
+    }
+
+    .dreq-back-btn {
+        display: flex;
+    }
+}
+
+/* ── Tablet tweaks ─────────────────────────────────────── */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .dreq-list-panel {
+        width: 300px;
+    }
+
+    .dreq-header {
+        padding: 1.5rem 1.5rem 1rem;
+    }
 }

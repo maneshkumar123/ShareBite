@@ -21,6 +21,30 @@ const STATUS_LABEL: Record<ClaimRequestStatus, string> = {
     withdrawn: 'Withdrawn',
 };
 
+/* Inline SVG icons */
+const InboxIcon = () => (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor"
+        strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 30h10l4 6h8l4-6h10" />
+        <path d="M10.8 14.4L6 30v10a2 2 0 0 0 2 2h32a2 2 0 0 0 2-2V30l-4.8-15.6A2 2 0 0 0 35.28 13H12.72a2 2 0 0 0-1.92 1.4z" />
+    </svg>
+);
+
+const ShieldIcon = () => (
+    <svg className="dreq-charity-badge" width="14" height="14" viewBox="0 0 16 16"
+        fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M8 1.5L2.5 4v4c0 3.5 2.3 6.2 5.5 7 3.2-.8 5.5-3.5 5.5-7V4L8 1.5z" />
+        <path d="M6 8l1.5 1.5L10.5 6" />
+    </svg>
+);
+
+const BackArrowIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
+        strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 3L5 8l5 5" />
+    </svg>
+);
+
 const DonorRequests: React.FC = () => {
     const { user } = useAuth();
     const [requests, setRequests] = useState<ClaimRequestSummary[]>([]);
@@ -60,10 +84,13 @@ const DonorRequests: React.FC = () => {
 
     const pendingCount = requests.filter(r => r.status === 'pending').length;
 
+    /* flat index for stagger animation */
+    let cardIndex = 0;
+
     return (
         <div className="dreq-page">
             <div className="dreq-header">
-                <div>
+                <div className="dreq-header-left">
                     <h1>Requests</h1>
                     <p className="dreq-subtitle">
                         {pendingCount} pending request{pendingCount !== 1 ? 's' : ''}
@@ -74,6 +101,7 @@ const DonorRequests: React.FC = () => {
                         className={`dreq-tab ${filter === 'pending' ? 'dreq-tab--active' : ''}`}
                         onClick={() => setFilter('pending')}
                     >
+                        <span className="dreq-tab-dot dreq-tab-dot--pending" />
                         Pending
                     </button>
                     <button
@@ -90,10 +118,16 @@ const DonorRequests: React.FC = () => {
                 <div className={`dreq-list-panel ${showChat ? 'dreq-list-panel--hidden-mobile' : ''}`}>
                     {loading ? (
                         <div className="dreq-loading">
-                            {[0,1,2].map(i => <div key={i} className="dreq-skeleton" style={{ animationDelay: `${i*80}ms` }} />)}
+                            {[0, 1, 2].map(i => (
+                                <div key={i} className="dreq-skeleton"
+                                    style={{ animationDelay: `${i * 80}ms` }} />
+                            ))}
                         </div>
                     ) : filtered.length === 0 ? (
                         <div className="dreq-empty">
+                            <div className="dreq-empty-icon">
+                                <InboxIcon />
+                            </div>
                             <p className="dreq-empty-title">
                                 {filter === 'pending' ? 'No pending requests' : 'No requests yet'}
                             </p>
@@ -106,35 +140,48 @@ const DonorRequests: React.FC = () => {
                     ) : (
                         Object.entries(grouped).map(([listingId, reqs]) => (
                             <div key={listingId} className="dreq-group">
-                                <p className="dreq-group-label">{reqs[0].listingTitle}</p>
-                                {reqs.map(req => (
-                                    <button
-                                        key={req.id}
-                                        className={`dreq-card ${selectedId === req.id ? 'dreq-card--active' : ''}`}
-                                        onClick={() => handleSelect(req.id)}
-                                    >
-                                        <div className="dreq-card-top">
-                                            <span className="dreq-card-name">
-                                                {req.recipientName}
-                                                {req.recipientOrgName && (
-                                                    <span className="dreq-card-org"> · {req.recipientOrgName}</span>
+                                <div className="dreq-group-header">
+                                    <p className="dreq-group-label">{reqs[0].listingTitle}</p>
+                                    <span className="dreq-group-count">{reqs.length}</span>
+                                </div>
+                                {reqs.map(req => {
+                                    const i = cardIndex++;
+                                    return (
+                                        <button
+                                            key={req.id}
+                                            className={`dreq-card ${selectedId === req.id ? 'dreq-card--active' : ''}`}
+                                            onClick={() => handleSelect(req.id)}
+                                            style={{ animationDelay: `${i * 60}ms` }}
+                                        >
+                                            <div className="dreq-card-top">
+                                                <span className="dreq-card-name">
+                                                    {req.recipientName}
+                                                    {req.recipientOrgName && (
+                                                        <span className="dreq-card-org">
+                                                            <ShieldIcon />
+                                                            {req.recipientOrgName}
+                                                        </span>
+                                                    )}
+                                                </span>
+                                                {req.unreadCount > 0 && (
+                                                    <span className="dreq-unread">{req.unreadCount}</span>
                                                 )}
-                                            </span>
-                                            {req.unreadCount > 0 && (
-                                                <span className="dreq-unread">{req.unreadCount}</span>
+                                            </div>
+                                            {req.lastMessageBody && (
+                                                <p className="dreq-card-snippet">{req.lastMessageBody}</p>
                                             )}
-                                        </div>
-                                        {req.lastMessageBody && (
-                                            <p className="dreq-card-snippet">{req.lastMessageBody}</p>
-                                        )}
-                                        <div className="dreq-card-footer">
-                                            <span className={`dreq-status dreq-status--${req.status}`}>
-                                                {STATUS_LABEL[req.status]}
-                                            </span>
-                                            <span className="dreq-time">{formatRelative(req.lastMessageAt ?? req.createdAt)}</span>
-                                        </div>
-                                    </button>
-                                ))}
+                                            <div className="dreq-card-footer">
+                                                <span className={`dreq-status dreq-status--${req.status}`}>
+                                                    <span className="dreq-status-dot" />
+                                                    {STATUS_LABEL[req.status]}
+                                                </span>
+                                                <span className="dreq-time">
+                                                    {formatRelative(req.lastMessageAt ?? req.createdAt)}
+                                                </span>
+                                            </div>
+                                        </button>
+                                    );
+                                })}
                             </div>
                         ))
                     )}
@@ -145,7 +192,8 @@ const DonorRequests: React.FC = () => {
                     {selectedId && user ? (
                         <div className="dreq-chat-wrap" style={{ position: 'relative' }}>
                             <button className="dreq-back-btn" onClick={() => setShowChat(false)}>
-                                ← Back to Requests
+                                <BackArrowIcon />
+                                Back to Requests
                             </button>
                             <ClaimRequestChat
                                 requestId={selectedId}
@@ -158,7 +206,10 @@ const DonorRequests: React.FC = () => {
                         </div>
                     ) : (
                         <div className="dreq-empty-chat">
-                            <p>Select a request to review and chat</p>
+                            <div className="dreq-empty-chat-inner">
+                                <InboxIcon />
+                                <p>Select a request to review and chat</p>
+                            </div>
                         </div>
                     )}
                 </div>
