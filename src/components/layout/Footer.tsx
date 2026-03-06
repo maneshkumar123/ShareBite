@@ -1,7 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Footer.css';
 
 export const Footer: React.FC = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const scrollToSection = (sectionId: string) => {
+        if (location.pathname !== '/') {
+            navigate('/', { state: { scrollTo: sectionId } });
+        } else {
+            const el = document.getElementById(sectionId);
+            el?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -228,11 +241,11 @@ export const Footer: React.FC = () => {
                     <div className="footer-links-section">
                         <div className="footer-links">
                             <h3 className="footer-links-label">Quick Links</h3>
-                            <a href="/">Home</a>
-                            <a href="/about">About</a>
-                            <a href="/donate">Donate</a>
-                            <a href="/request">Request</a>
-                            <a href="/contact">Contact</a>
+                            <Link to="/">Home</Link>
+                            <button type="button" className="footer-link-btn" onClick={() => scrollToSection('how-it-works')}>How It Works</button>
+                            <button type="button" className="footer-link-btn" onClick={() => scrollToSection('why-sharebite')}>Why ShareBite</button>
+                            <button type="button" className="footer-link-btn" onClick={() => scrollToSection('contact')}>Contact</button>
+                            <Link to="/login">Sign In</Link>
                         </div>
 
                         <div className="footer-social">
@@ -240,12 +253,6 @@ export const Footer: React.FC = () => {
                             <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                             <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
                             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
-                        </div>
-
-                        <div className="footer-legal">
-                            <a href="/privacy">Privacy</a>
-                            <span className="divider">|</span>
-                            <a href="/terms">Terms</a>
                         </div>
                     </div>
                 </div>

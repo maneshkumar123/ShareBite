@@ -318,8 +318,22 @@
     transition: color 0.3s ease;
 }
 
-.footer-links a:hover {
+.footer-links a:hover,
+.footer-link-btn:hover {
     color: rgb(125, 255, 18);
+}
+
+.footer-link-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    color: rgb(0, 0, 0);
+    transition: color 0.3s ease;
+    text-align: left;
 }
 
 .footer-social {
@@ -552,8 +566,8 @@
     }
 
     .footer-links a,
-    .footer-social a,
-    .footer-legal a {
+    .footer-link-btn,
+    .footer-social a {
         font-size: 12px;
     }
 
