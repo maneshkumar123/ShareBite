@@ -2,23 +2,23 @@ import React, { useEffect, useRef } from 'react';
 import { importLibrary } from '@/lib/googleMaps';
 import './MapPicker.css';
 
-// ─── Dark map style ────────────────────────────────────────────────────────────
+// ─── Light map style (warm, minimal) ──────────────────────────────────────────
 
-const DARK_STYLES: google.maps.MapTypeStyle[] = [
-    { elementType: 'geometry', stylers: [{ color: '#141414' }] },
-    { elementType: 'labels.text.stroke', stylers: [{ color: '#141414' }] },
-    { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#aaaaaa' }] },
+const LIGHT_STYLES: google.maps.MapTypeStyle[] = [
+    { elementType: 'geometry', stylers: [{ color: '#f5f3ef' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#6B6860' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#1A1815' }] },
     { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-    { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#2c2c2c' }] },
-    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1e1e1e' }] },
-    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#6b6b6b' }] },
-    { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#373737' }] },
-    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3d3d3d' }] },
-    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#282828' }] },
+    { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E4E1DC' }] },
+    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9E9A94' }] },
+    { featureType: 'road.arterial', elementType: 'geometry.fill', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'road.highway', elementType: 'geometry.fill', stylers: [{ color: '#f0ede7' }] },
+    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#D5D2CC' }] },
     { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1f2e' }] },
-    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#2a3a4a' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#d4e4f1' }] },
+    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#9bbad4' }] },
 ];
 
 // ─── Props ─────────────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ const MapPicker: React.FC<MapPickerProps> = ({ latitude, longitude, onLocationCh
             map.current = new Map(mapContainer.current, {
                 center: initPos.current,
                 zoom: 14,
-                styles: DARK_STYLES,        // dark theme — only works without mapId
+                styles: LIGHT_STYLES,
                 zoomControl: true,
                 streetViewControl: false,
                 mapTypeControl: false,

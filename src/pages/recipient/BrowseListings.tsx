@@ -1,7 +1,7 @@
 import React, {
     useEffect, useState, useCallback, useMemo, useRef,
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { listingService } from '@services/listingService';
 import { profileService } from '@services/profileService';
@@ -13,21 +13,21 @@ import './BrowseListings.css';
 
 const NEARBY_RADIUS_M = 10_000; // 10 km
 
-const DARK_STYLES: google.maps.MapTypeStyle[] = [
-    { elementType: 'geometry', stylers: [{ color: '#141414' }] },
-    { elementType: 'labels.text.stroke', stylers: [{ color: '#141414' }] },
-    { elementType: 'labels.text.fill', stylers: [{ color: '#757575' }] },
-    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#aaaaaa' }] },
+const LIGHT_STYLES: google.maps.MapTypeStyle[] = [
+    { elementType: 'geometry', stylers: [{ color: '#f5f3ef' }] },
+    { elementType: 'labels.text.fill', stylers: [{ color: '#6B6860' }] },
+    { elementType: 'labels.text.stroke', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#1A1815' }] },
     { featureType: 'poi', stylers: [{ visibility: 'off' }] },
-    { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#2c2c2c' }] },
-    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#1e1e1e' }] },
-    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#6b6b6b' }] },
-    { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#373737' }] },
-    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3d3d3d' }] },
-    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#282828' }] },
+    { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E4E1DC' }] },
+    { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9E9A94' }] },
+    { featureType: 'road.arterial', elementType: 'geometry.fill', stylers: [{ color: '#FFFFFF' }] },
+    { featureType: 'road.highway', elementType: 'geometry.fill', stylers: [{ color: '#f0ede7' }] },
+    { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: '#D5D2CC' }] },
     { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#0d1f2e' }] },
-    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#2a3a4a' }] },
+    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#d4e4f1' }] },
+    { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#9bbad4' }] },
 ];
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -107,42 +107,13 @@ const FoodIcon = () => (
     </svg>
 );
 
-// ─── Confirm Modal ─────────────────────────────────────────────────────────────
-
-const ConfirmModal: React.FC<{
-    listing: EnhancedListing;
-    isConfirming: boolean;
-    onConfirm: () => void;
-    onCancel: () => void;
-}> = ({ listing, isConfirming, onConfirm, onCancel }) => (
-    <div className="bl-modal-overlay" role="dialog" aria-modal="true" onClick={onCancel}>
-        <div className="bl-modal" onClick={e => e.stopPropagation()}>
-            <p className="bl-modal-label">Confirm claim</p>
-            <h3 className="bl-modal-title">{listing.title}</h3>
-            <p className="bl-modal-donor">from {listing.donorName}</p>
-            <p className="bl-modal-note">
-                Once claimed the listing is removed from the pool.
-                Please collect before it expires.
-            </p>
-            <div className="bl-modal-actions">
-                <button className="bl-modal-cancel" onClick={onCancel} disabled={isConfirming}>Cancel</button>
-                <button className="bl-modal-confirm" onClick={onConfirm} disabled={isConfirming}>
-                    {isConfirming ? <><SpinnerIcon /> Claiming…</> : 'Confirm Claim'}
-                </button>
-            </div>
-        </div>
-    </div>
-);
-
 // ─── Listing Card (List View) ──────────────────────────────────────────────────
 
 const ListingCard: React.FC<{
     listing: EnhancedListing;
     index: number;
-    isClaiming: boolean;
-    isClaimed: boolean;
-    onRequestClaim: () => void;
-}> = ({ listing, index, isClaiming, isClaimed, onRequestClaim }) => {
+    onView: () => void;
+}> = ({ listing, index, onView }) => {
     const expiry = formatExpiry(listing.expiryTime);
     const dist = formatDistance(listing.distanceM);
 
@@ -170,15 +141,7 @@ const ListingCard: React.FC<{
                     <span className="bl-card-qty">{listing.quantity} {listing.quantityUnit}</span>
                     <div className="bl-card-actions">
                         <Link to={`/listing/${listing.id}`} className="bl-details-link">Details</Link>
-                        {isClaimed
-                            ? <span className="bl-claimed-tag">✓ Claimed</span>
-                            : (
-                                <button className="bl-claim-btn" onClick={onRequestClaim} disabled={isClaiming}>
-                                    {isClaiming ? <SpinnerIcon /> : null}
-                                    {isClaiming ? 'Claiming…' : 'Claim'}
-                                </button>
-                            )
-                        }
+                        <button className="bl-claim-btn" onClick={onView}>Request</button>
                     </div>
                 </div>
             </div>
@@ -190,11 +153,9 @@ const ListingCard: React.FC<{
 
 const MapInfoPanel: React.FC<{
     listing: EnhancedListing | null;
-    isClaiming: boolean;
-    isClaimed: boolean;
-    onClaim: () => void;
+    onView: () => void;
     onClose: () => void;
-}> = ({ listing, isClaiming, isClaimed, onClaim, onClose }) => {
+}> = ({ listing, onView, onClose }) => {
     if (!listing) return null;
     const expiry = formatExpiry(listing.expiryTime);
     const dist = formatDistance(listing.distanceM);
@@ -235,18 +196,9 @@ const MapInfoPanel: React.FC<{
             )}
 
             {/* Action */}
-            <Link to={`/listing/${listing.id}`} className="bl-info-details-link">View Details</Link>
-            {isClaimed
-                ? <div className="bl-info-claimed">✓ Already Claimed</div>
-                : (
-                    <button className="bl-info-claim-btn" onClick={onClaim} disabled={isClaiming}>
-                        {isClaiming
-                            ? <><SpinnerIcon /> Claiming…</>
-                            : <><span>Claim Food</span><ChevronRight /></>
-                        }
-                    </button>
-                )
-            }
+            <button className="bl-info-claim-btn" onClick={onView}>
+                <span>Request Food</span><ChevronRight />
+            </button>
         </div>
     );
 };
@@ -282,7 +234,7 @@ const MapView: React.FC<{
             mapRef.current = new Map(containerRef.current, {
                 center,
                 zoom: 13,
-                styles: DARK_STYLES,
+                styles: LIGHT_STYLES,
                 zoomControl: true,
                 streetViewControl: false,
                 mapTypeControl: false,
@@ -391,6 +343,7 @@ type SortOption = 'distance' | 'expiry' | 'newest';
 
 const BrowseListings: React.FC = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
 
     const [view, setView] = useState<ViewMode>('list');
     const [filterMode, setFilterMode] = useState<FilterMode>('nearby');
@@ -406,9 +359,6 @@ const BrowseListings: React.FC = () => {
     const [locationLoaded, setLocationLoaded] = useState(false);
 
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const [claimingId, setClaimingId] = useState<string | null>(null);
-    const [claimedIds, setClaimedIds] = useState<Set<string>>(new Set());
-    const [confirmListing, setConfirmListing] = useState<EnhancedListing | null>(null);
 
     // ── Load recipient location ──────────────────────────────────────────────
     useEffect(() => {
@@ -434,7 +384,6 @@ const BrowseListings: React.FC = () => {
         const result = await listingService.getListingsWithDistance(userLat, userLng, radius, 60);
         if (result.success && result.data) {
             setListings(result.data);
-            setClaimedIds(new Set());
         } else {
             setError('Failed to load listings. Please try again.');
         }
@@ -448,7 +397,7 @@ const BrowseListings: React.FC = () => {
 
     // ── Filter + sort ────────────────────────────────────────────────────────
     const filtered = useMemo(() => {
-        let result = listings.filter(l => !claimedIds.has(l.id));
+        let result = [...listings];
         if (query.trim()) {
             const q = query.toLowerCase();
             result = result.filter(l =>
@@ -463,32 +412,12 @@ const BrowseListings: React.FC = () => {
             result = [...result].sort((a, b) => new Date(b.expiryTime).getTime() - new Date(a.expiryTime).getTime());
         }
         return result;
-    }, [listings, claimedIds, query, sort]);
+    }, [listings, query, sort]);
 
     const selectedListing = useMemo(
         () => filtered.find(l => l.id === selectedId) ?? null,
         [filtered, selectedId]
     );
-
-    // ── Claim ────────────────────────────────────────────────────────────────
-    const handleClaim = useCallback(async (listing: EnhancedListing) => {
-        if (!user?.id || claimingId) return;
-        setConfirmListing(null);
-        setClaimingId(listing.id);
-        try {
-            const res = await listingService.claimListing(listing.id, user.id);
-            if (res.success) {
-                setClaimedIds(prev => new Set([...prev, listing.id]));
-                setSelectedId(null);
-            } else {
-                setError(res.error ?? 'Failed to claim listing');
-            }
-        } catch {
-            setError('An error occurred while claiming.');
-        } finally {
-            setClaimingId(null);
-        }
-    }, [user?.id, claimingId]);
 
     // ── Render ────────────────────────────────────────────────────────────────
     const hasLocation = userLat != null && userLng != null;
@@ -630,9 +559,7 @@ const BrowseListings: React.FC = () => {
                                     key={l.id}
                                     listing={l}
                                     index={i}
-                                    isClaiming={claimingId === l.id}
-                                    isClaimed={claimedIds.has(l.id)}
-                                    onRequestClaim={() => setConfirmListing(l)}
+                                    onView={() => navigate(`/listing/${l.id}`)}
                                 />
                             ))}
                         </div>
@@ -658,9 +585,7 @@ const BrowseListings: React.FC = () => {
                     <div className={`bl-info-overlay${selectedId ? ' is-open' : ''}`}>
                         <MapInfoPanel
                             listing={selectedListing}
-                            isClaiming={claimingId === selectedId}
-                            isClaimed={selectedId ? claimedIds.has(selectedId) : false}
-                            onClaim={() => selectedListing && setConfirmListing(selectedListing)}
+                            onView={() => selectedListing && navigate(`/listing/${selectedListing.id}`)}
                             onClose={() => setSelectedId(null)}
                         />
                     </div>
@@ -678,15 +603,6 @@ const BrowseListings: React.FC = () => {
                 </div>
             )}
 
-            {/* ── Confirm Modal ──────────────────────────────────────── */}
-            {confirmListing && (
-                <ConfirmModal
-                    listing={confirmListing}
-                    isConfirming={claimingId === confirmListing.id}
-                    onConfirm={() => handleClaim(confirmListing)}
-                    onCancel={() => setConfirmListing(null)}
-                />
-            )}
         </div>
     );
 };

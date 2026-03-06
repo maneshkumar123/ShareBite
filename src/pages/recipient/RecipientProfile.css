@@ -1,10 +1,13 @@
+/* ================================================================
+   RecipientProfile — Light Theme (matches DonorProfile pattern)
+   Uses design-tokens.css variables throughout
+   ================================================================ */
+
 /* ── Page ───────────────────────────────────────────── */
 .rp-page {
     padding: 2rem 2.5rem;
     min-height: 100%;
-    background: #0D0D0D;
-    background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
+    background: var(--color-bg-primary);
     font-family: var(--font-family);
     animation: rp-fade-in 0.4s ease both;
 }
@@ -20,17 +23,18 @@
 }
 
 .rp-header h1 {
+    font-family: var(--font-family-display);
     font-size: 1.75rem;
     font-weight: 700;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
     margin: 0 0 0.3rem;
     letter-spacing: -0.02em;
 }
 
 .rp-header p {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.8rem;
-    color: rgba(247,247,247,0.5);
+    color: var(--color-text-muted);
     margin: 0;
     letter-spacing: 0.03em;
 }
@@ -43,13 +47,14 @@
     align-items: start;
 }
 
-/* ── Glass Card Base ────────────────────────────────── */
+/* ── Card Base ──────────────────────────────────────── */
 .rp-avatar-card,
 .rp-details-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-sm);
 }
 
 /* ── Avatar Card ────────────────────────────────────── */
@@ -65,8 +70,8 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: #7DFF12;
-    color: #0D0D0D;
+    background: var(--color-accent);
+    color: #1A1815;
     font-family: var(--font-family);
     font-weight: 700;
     font-size: 28px;
@@ -75,63 +80,65 @@
     justify-content: center;
     margin-bottom: 1rem;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(125, 255, 18, 0.2);
 }
 
 .rp-avatar-name {
+    font-family: var(--font-family-display);
     font-size: 1.25rem;
     font-weight: 700;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
 .rp-avatar-email {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.8rem;
-    color: rgba(247,247,247,0.5);
+    color: var(--color-text-muted);
     margin: 0 0 0.75rem;
     word-break: break-all;
 }
 
 .rp-role-badge {
     display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.65rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(99,102,241,0.2);
-    color: #818cf8;
-    border: 1px solid rgba(99,102,241,0.3);
-    border-radius: 999px;
+    background: rgba(99, 102, 241, 0.08);
+    color: #6366f1;
+    border: 1px solid rgba(99, 102, 241, 0.18);
+    border-radius: var(--radius-full);
     padding: 0.2rem 0.75rem;
     margin-bottom: 0.25rem;
 }
 
 .rp-charity-badge {
     display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.65rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(251,191,36,0.2);
-    color: #fbbf24;
-    border: 1px solid rgba(251,191,36,0.3);
-    border-radius: 999px;
+    background: rgba(192, 123, 0, 0.08);
+    color: var(--color-warning);
+    border: 1px solid rgba(192, 123, 0, 0.18);
+    border-radius: var(--radius-full);
     padding: 0.2rem 0.75rem;
     margin-bottom: 0.5rem;
 }
 
 .rp-joined {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.7rem;
-    color: rgba(247,247,247,0.35);
+    color: var(--color-text-muted);
     margin: 0 0 1rem;
 }
 
 .rp-stats-row {
     width: 100%;
     padding: 1rem 0;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
     margin-bottom: 1rem;
     display: flex;
     justify-content: space-around;
@@ -145,16 +152,16 @@
 }
 
 .rp-stat-value {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 1.5rem;
     font-weight: 500;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
 }
 
 .rp-stat-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.65rem;
-    color: rgba(247,247,247,0.4);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
@@ -163,9 +170,9 @@
     width: 100%;
     padding: 0.7rem 1rem;
     background: transparent;
-    border: 1px solid rgba(239,68,68,0.4);
-    color: #ef4444;
-    border-radius: 8px;
+    border: 1px solid rgba(220, 60, 60, 0.25);
+    color: #C53030;
+    border-radius: var(--radius-sm);
     font-family: var(--font-family);
     font-size: 0.85rem;
     font-weight: 600;
@@ -174,8 +181,8 @@
 }
 
 .rp-signout-btn:hover {
-    background: rgba(239,68,68,0.08);
-    border-color: rgba(239,68,68,0.6);
+    background: rgba(220, 60, 60, 0.06);
+    border-color: rgba(220, 60, 60, 0.4);
 }
 
 /* ── Details Card ───────────────────────────────────── */
@@ -191,9 +198,10 @@
 }
 
 .rp-details-header h2 {
+    font-family: var(--font-family-display);
     font-size: 1.1rem;
     font-weight: 700;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
     margin: 0;
 }
 
@@ -202,19 +210,19 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.45rem 1rem;
-    background: rgba(125,255,18,0.08);
-    color: #7DFF12;
-    border: 1px solid rgba(125,255,18,0.2);
-    border-radius: 8px;
-    font-family: 'JetBrains Mono', monospace;
+    background: var(--color-accent-subtle);
+    color: var(--color-accent-dark);
+    border: 1px solid rgba(39, 106, 0, 0.15);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family-mono);
     font-size: 0.75rem;
     cursor: pointer;
     transition: background 0.15s, border-color 0.15s;
 }
 
 .rp-edit-btn:hover {
-    background: rgba(125,255,18,0.15);
-    border-color: rgba(125,255,18,0.4);
+    background: rgba(39, 106, 0, 0.1);
+    border-color: rgba(39, 106, 0, 0.3);
 }
 
 /* ── View Grid ──────────────────────────────────────── */
@@ -231,9 +239,9 @@
 }
 
 .rp-field-label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.65rem;
-    color: rgba(247,247,247,0.4);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
     display: inline-flex;
@@ -243,36 +251,36 @@
 
 .rp-field-value {
     font-size: 0.95rem;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
     font-weight: 500;
 }
 
 .rp-field-value.rp-muted {
-    color: rgba(247,247,247,0.35);
+    color: var(--color-text-muted);
     font-style: italic;
 }
 
 /* ── Charity Badge (view mode) ─────────────────────── */
 .rp-badge--charity {
     display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.7rem;
     letter-spacing: 0.04em;
     padding: 0.2rem 0.6rem;
     border-radius: 6px;
-    background: rgba(16,185,129,0.12);
-    color: #34d399;
+    background: rgba(22, 163, 74, 0.08);
+    color: var(--color-success);
 }
 
 .rp-badge--individual {
     display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.7rem;
     letter-spacing: 0.04em;
     padding: 0.2rem 0.6rem;
     border-radius: 6px;
-    background: rgba(255,255,255,0.06);
-    color: rgba(247,247,247,0.5);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-muted);
 }
 
 /* ── Toggle Switch ─────────────────────────────────── */
@@ -293,7 +301,8 @@
 .rp-toggle-slider {
     position: absolute;
     inset: 0;
-    background: rgba(255,255,255,0.1);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
     border-radius: 24px;
     cursor: pointer;
     transition: 0.2s;
@@ -304,15 +313,17 @@
     position: absolute;
     width: 18px;
     height: 18px;
-    left: 3px;
-    bottom: 3px;
+    left: 2px;
+    bottom: 2px;
     background: white;
     border-radius: 50%;
     transition: 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .rp-toggle input:checked + .rp-toggle-slider {
-    background: #7DFF12;
+    background: var(--color-accent);
+    border-color: var(--color-accent);
 }
 
 .rp-toggle input:checked + .rp-toggle-slider::before {
@@ -327,7 +338,7 @@
 
 .rp-toggle-label {
     font-size: 0.9rem;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
 }
 
 /* ── Form ───────────────────────────────────────────── */
@@ -348,27 +359,28 @@
 }
 
 .rp-form-group label {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.65rem;
-    color: rgba(247,247,247,0.5);
+    color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.08em;
 }
 
 .rp-form-group input {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
+    background: #FFFFFF;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
     padding: 0.65rem 0.85rem;
-    color: #F7F7F7;
+    color: var(--color-text-primary);
     font-family: var(--font-family);
     font-size: 0.9rem;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .rp-form-group input:focus {
-    border-color: #7DFF12;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px var(--color-accent-glow);
 }
 
 .rp-address-row {
@@ -383,11 +395,11 @@
 
 .rp-geocode-btn {
     padding: 0.65rem 1rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 8px;
-    color: #F7F7F7;
-    font-family: 'JetBrains Mono', monospace;
+    background: var(--color-bg-secondary);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-mono);
     font-size: 0.75rem;
     cursor: pointer;
     white-space: nowrap;
@@ -395,15 +407,16 @@
 }
 
 .rp-geocode-btn:hover {
-    border-color: #7DFF12;
-    background: rgba(125,255,18,0.05);
+    border-color: var(--color-accent);
+    background: var(--color-accent-subtle);
+    color: var(--color-accent-dark);
 }
 
 .rp-map-container {
     margin-top: 0.75rem;
-    border-radius: 10px;
+    border-radius: var(--radius-md);
     overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid var(--color-border);
 }
 
 .rp-form-actions {
@@ -415,20 +428,21 @@
 
 .rp-save-btn {
     padding: 0.65rem 1.5rem;
-    background: #7DFF12;
-    color: #0D0D0D;
+    background: var(--color-accent);
+    color: #1A1815;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-sm);
     font-family: var(--font-family);
     font-weight: 700;
     font-size: 0.875rem;
     cursor: pointer;
     transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: 0 2px 6px rgba(125, 255, 18, 0.2);
 }
 
 .rp-save-btn:hover:not(:disabled) {
-    background: #a3ff5c;
-    box-shadow: 0 0 20px rgba(125,255,18,0.4);
+    background: var(--color-accent-light);
+    box-shadow: 0 4px 14px rgba(125, 255, 18, 0.3);
 }
 
 .rp-save-btn:disabled {
@@ -439,9 +453,9 @@
 .rp-cancel-btn {
     padding: 0.65rem 1.5rem;
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.12);
-    color: rgba(247,247,247,0.6);
-    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-sm);
     font-family: var(--font-family);
     font-size: 0.875rem;
     cursor: pointer;
@@ -449,8 +463,8 @@
 }
 
 .rp-cancel-btn:hover {
-    border-color: rgba(255,255,255,0.25);
-    color: #F7F7F7;
+    border-color: var(--color-border-hover);
+    color: var(--color-text-primary);
 }
 
 /* ── Error ──────────────────────────────────────────── */
@@ -461,16 +475,16 @@
 
 .rp-error-msg {
     font-size: 0.95rem;
-    color: #ef4444;
+    color: var(--color-error);
     margin: 0 0 1.5rem;
 }
 
 .rp-retry-btn {
     padding: 0.6rem 1.2rem;
-    background: rgba(239,68,68,0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239,68,68,0.3);
-    border-radius: 8px;
+    background: rgba(220, 60, 60, 0.06);
+    color: var(--color-error);
+    border: 1px solid rgba(220, 60, 60, 0.2);
+    border-radius: var(--radius-sm);
     font-family: var(--font-family);
     font-size: 0.85rem;
     font-weight: 600;
@@ -479,28 +493,29 @@
 }
 
 .rp-retry-btn:hover {
-    background: rgba(239,68,68,0.18);
+    background: rgba(220, 60, 60, 0.1);
 }
 
 .rp-inline-error {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-family-mono);
     font-size: 0.78rem;
-    color: #ef4444;
+    color: var(--color-error);
     margin-top: 0.75rem;
     grid-column: 1 / -1;
 }
 
 /* ── Skeleton Loading ───────────────────────────────── */
 .rp-skeleton-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-sm);
 }
 
 .rp-skeleton-line {
     height: 14px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+    background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, #FFFFFF 50%, var(--color-bg-tertiary) 75%);
     background-size: 200% 100%;
     border-radius: 6px;
     animation: rp-shimmer 1.5s infinite;
@@ -510,7 +525,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
+    background: linear-gradient(90deg, var(--color-bg-tertiary) 25%, #FFFFFF 50%, var(--color-bg-tertiary) 75%);
     background-size: 200% 100%;
     animation: rp-shimmer 1.5s infinite;
     margin: 0 auto 1rem;

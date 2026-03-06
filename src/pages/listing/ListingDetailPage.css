@@ -664,17 +664,17 @@
 .ldp-request-form-label { font-size: 0.8125rem; color: #888; margin: 0; }
 .ldp-request-textarea {
     width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    color: #F7F7F7;
+    background: #FFFFFF;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
     font-size: 0.875rem;
     padding: 0.75rem;
     resize: vertical;
     font-family: inherit;
     line-height: 1.5;
 }
-.ldp-request-textarea:focus { outline: none; border-color: rgba(125,255,18,0.4); }
+.ldp-request-textarea:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
 .ldp-request-error { font-size: 0.8125rem; color: #f87171; margin: 0; }
 .ldp-request-form-actions { display: flex; gap: 0.75rem; }
 .ldp-request-cancel {

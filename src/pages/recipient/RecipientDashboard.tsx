@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { supabase } from '@services/api';
 import { listingService } from '@services/listingService';
 import { profileService } from '@services/profileService';
+import { requestService } from '@services/requestService';
 import { ROUTES } from '@utils/constants';
 import './RecipientDashboard.css';
 
@@ -88,22 +89,14 @@ const MapPinIcon = () => (
     </svg>
 );
 
-const SpinnerIcon = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="13" height="13"
-        style={{ animation: 'rd-spin 0.75s linear infinite', flexShrink: 0 }}>
-        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-            strokeLinecap="round"/>
-    </svg>
-);
-
 // ─── Listing Card ─────────────────────────────────────────────────────────────
 
 const ListingCard: React.FC<{
     listing: NearbyListing;
     index: number;
-    isClaiming: boolean;
-    onClaim: () => void;
-}> = ({ listing, index, isClaiming, onClaim }) => {
+    requested: boolean;
+    onView: () => void;
+}> = ({ listing, index, requested, onView }) => {
     const expiryText = formatExpiry(listing.expiryTime);
     const isUrgent = expiryText === 'Expires soon';
 
@@ -128,16 +121,13 @@ const ListingCard: React.FC<{
             )}
             <div className="rd__listing-footer">
                 <Link to={`/listing/${listing.id}`} className="rd__details-link">Details</Link>
-                <button
-                    className={`rd__claim-btn${isClaiming ? ' rd__claim-btn--claiming' : ''}`}
-                    onClick={onClaim}
-                    disabled={isClaiming}
-                >
-                    {isClaiming
-                        ? <><SpinnerIcon /> Claiming…</>
-                        : <><span>Claim Food</span><ChevronRight /></>
-                    }
-                </button>
+                {requested ? (
+                    <span className="rd__requested-tag">Requested</span>
+                ) : (
+                    <button className="rd__claim-btn" onClick={onView}>
+                        <span>Request Food</span><ChevronRight />
+                    </button>
+                )}
             </div>
         </div>
     );
@@ -145,11 +135,11 @@ const ListingCard: React.FC<{
 
 const RecipientDashboard: React.FC = () => {
     const { user } = useAuth();
+    const navigate = useNavigate();
     const [stats, setStats] = useState<RecipientStats>({ totalClaimed: 0, mealsReceived: 0, availableCount: 0 });
     const [listings, setListings] = useState<NearbyListing[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [claimingId, setClaimingId] = useState<string | null>(null);
-    const [claimedIds, setClaimedIds] = useState<Set<string>>(new Set());
+    const [requestedIds, setRequestedIds] = useState<Set<string>>(new Set());
 
     const load = useCallback(async () => {
         if (!user?.id) return;
@@ -196,7 +186,12 @@ const RecipientDashboard: React.FC = () => {
 
             setStats({ totalClaimed, mealsReceived, availableCount: availableCount ?? nearby.length });
             setListings(nearby);
-            setClaimedIds(new Set());
+
+            // Fetch which listings the user has already requested
+            const reqRes = await requestService.getMyRequests(user.id);
+            if (reqRes.success && reqRes.data) {
+                setRequestedIds(new Set(reqRes.data.map(r => r.listingId)));
+            }
         } finally {
             setIsLoading(false);
         }
@@ -204,27 +199,7 @@ const RecipientDashboard: React.FC = () => {
 
     useEffect(() => { load(); }, [load]);
 
-    const handleClaim = async (listing: NearbyListing) => {
-        if (!user?.id || claimingId) return;
-        setClaimingId(listing.id);
-        try {
-            const res = await listingService.claimListing(listing.id, user.id);
-            if (res.success) {
-                setClaimedIds(prev => new Set([...prev, listing.id]));
-                setStats(prev => ({
-                    ...prev,
-                    totalClaimed: prev.totalClaimed + 1,
-                    mealsReceived: prev.mealsReceived + listing.quantity,
-                    availableCount: Math.max(0, prev.availableCount - 1),
-                }));
-            }
-        } finally {
-            setClaimingId(null);
-        }
-    };
-
     const firstName = user?.fullName?.split(' ')[0] || 'there';
-    const visibleListings = listings.filter(l => !claimedIds.has(l.id));
 
     return (
         <div className="rd">
@@ -269,7 +244,7 @@ const RecipientDashboard: React.FC = () => {
                             <div key={i} className="rd__skeleton" style={{ animationDelay: `${i * 80}ms` }} />
                         ))}
                     </div>
-                ) : visibleListings.length === 0 ? (
+                ) : listings.length === 0 ? (
                     <div className="rd__empty">
                         <div className="rd__empty-icon" aria-hidden="true">
                             <svg viewBox="0 0 80 80" fill="none" width="72" height="72">
@@ -285,13 +260,13 @@ const RecipientDashboard: React.FC = () => {
                     </div>
                 ) : (
                     <div className="rd__grid">
-                        {visibleListings.map((l, i) => (
+                        {listings.map((l, i) => (
                             <ListingCard
                                 key={l.id}
                                 listing={l}
                                 index={i}
-                                isClaiming={claimingId === l.id}
-                                onClaim={() => handleClaim(l)}
+                                requested={requestedIds.has(l.id)}
+                                onView={() => navigate(`/listing/${l.id}`)}
                             />
                         ))}
                     </div>

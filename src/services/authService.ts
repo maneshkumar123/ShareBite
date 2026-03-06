@@ -155,6 +155,9 @@ export const authService = {
 
     /**
      * Logout current user
+     * Signs out from Supabase (clears server session + localStorage tokens),
+     * removes all Supabase Realtime channels, and purges any residual
+     * auth keys from storage so the next login starts completely fresh.
      */
     logout: async (): Promise<ApiResponse<null>> => {
         if (!isSupabaseConfigured()) {
@@ -162,8 +165,26 @@ export const authService = {
         }
 
         return apiRequest(async () => {
-            const { error } = await supabase.auth.signOut();
+            // 1. Tear down all Realtime subscriptions so no stale listeners
+            //    fire after the session is gone.
+            supabase.removeAllChannels();
+
+            // 2. Sign out from Supabase (revokes refresh token server-side
+            //    and clears its own localStorage keys).
+            const { error } = await supabase.auth.signOut({ scope: 'local' });
             if (error) throw error;
+
+            // 3. Purge any residual Supabase auth keys that signOut may
+            //    not have cleaned up (edge-case with stale tabs / race conditions).
+            const storage = globalThis?.localStorage;
+            if (storage) {
+                Object.keys(storage).forEach((key) => {
+                    if (key.startsWith('sb-') && (key.endsWith('-auth-token') || key.endsWith('-auth-token-code-verifier'))) {
+                        storage.removeItem(key);
+                    }
+                });
+            }
+
             return null;
         });
     },

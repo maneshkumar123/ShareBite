@@ -261,6 +261,7 @@
     top: calc(100% + 10px);
     right: 0;
     width: 324px;
+    max-width: calc(100vw - 1.5rem);
     background: #FFFFFF;
     border: 1px solid var(--color-border);
     border-radius: 16px;
@@ -268,6 +269,18 @@
     z-index: 600;
     overflow: hidden;
     animation: dh-panel-in 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (max-width: 480px) {
+    .dh__notif-panel {
+        position: fixed;
+        top: var(--header-height-mobile);
+        right: 0.5rem;
+        left: 0.5rem;
+        width: auto;
+        max-width: none;
+        border-radius: 12px;
+    }
 }
 
 /* Green top stripe on panel — same design grammar as title accent */

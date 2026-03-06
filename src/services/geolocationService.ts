@@ -1,10 +1,10 @@
 /**
  * Geolocation Service
- * 
+ *
  * Handles all geolocation operations:
  * - Browser geolocation API
- * - Mapbox Geocoding (address → coordinates)
- * - Mapbox Reverse Geocoding (coordinates → address)
+ * - Google Maps Geocoding (address → coordinates)
+ * - Google Maps Reverse Geocoding (coordinates → address)
  * - PostGIS POINT format conversion
  */
 
@@ -15,8 +15,8 @@ import { apiRequest } from './api';
 // CONFIGURATION
 // ==============================================
 
-const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
-const MAPBOX_GEOCODING_API = 'https://api.mapbox.com/geocoding/v5/mapbox.places';
+const GOOGLE_MAPS_KEY = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+const GOOGLE_GEOCODING_API = 'https://maps.googleapis.com/maps/api/geocode/json';
 
 // ==============================================
 // TYPES
@@ -45,10 +45,10 @@ export const createPostGISPoint = (lng: number, lat: number): string => {
 };
 
 /**
- * Validate Mapbox configuration
+ * Validate Google Maps configuration
  */
-const isMapboxConfigured = (): boolean => {
-    return Boolean(MAPBOX_ACCESS_TOKEN);
+const isGoogleMapsConfigured = (): boolean => {
+    return Boolean(GOOGLE_MAPS_KEY);
 };
 
 // ==============================================
@@ -57,9 +57,9 @@ const isMapboxConfigured = (): boolean => {
 
 export const geolocationService = {
     /**
-     * Check if Mapbox is configured
+     * Check if Google Maps geocoding is configured
      */
-    isConfigured: isMapboxConfigured,
+    isConfigured: isGoogleMapsConfigured,
 
     /**
      * Get user's current position from browser
@@ -106,20 +106,19 @@ export const geolocationService = {
     },
 
     /**
-     * Geocode address to coordinates using Mapbox
+     * Geocode address to coordinates using Google Maps
      * Converts "123 Main St, City" → { lat, lng, formatted address }
      */
     geocodeAddress: async (address: string): Promise<ApiResponse<GeocodeResult>> => {
-        if (!isMapboxConfigured()) {
+        if (!isGoogleMapsConfigured()) {
             return {
                 success: false,
-                error: 'Mapbox is not configured. Please add VITE_MAPBOX_ACCESS_TOKEN to .env.local',
+                error: 'Google Maps is not configured. Please add VITE_GOOGLE_MAPS_KEY to .env.local',
             };
         }
 
         return apiRequest(async () => {
-            const encodedAddress = encodeURIComponent(address);
-            const url = `${MAPBOX_GEOCODING_API}/${encodedAddress}.json?access_token=${MAPBOX_ACCESS_TOKEN}&limit=1`;
+            const url = `${GOOGLE_GEOCODING_API}?address=${encodeURIComponent(address)}&key=${GOOGLE_MAPS_KEY}`;
 
             const response = await fetch(url);
             if (!response.ok) {
@@ -127,52 +126,51 @@ export const geolocationService = {
             }
 
             const data = await response.json();
-            
-            if (!data.features || data.features.length === 0) {
+
+            if (data.status !== 'OK' || !data.results || data.results.length === 0) {
                 throw new Error('No location found for the given address');
             }
 
-            const feature = data.features[0];
-            const [longitude, latitude] = feature.center;
+            const result = data.results[0];
+            const { lat: latitude, lng: longitude } = result.geometry.location;
 
-            // Extract place details from context
-            const context = feature.context || [];
-            const getContext = (type: string) => {
-                const item = context.find((c: { id: string }) => c.id.startsWith(type));
-                return item ? item.text : undefined;
+            // Extract place details from address_components
+            const getComponent = (type: string) => {
+                const comp = result.address_components?.find(
+                    (c: { types: string[] }) => c.types.includes(type)
+                );
+                return comp?.long_name;
             };
 
             return {
                 latitude,
                 longitude,
                 address: address,
-                placeName: feature.place_name,
-                city: getContext('place'),
-                region: getContext('region'),
-                country: getContext('country'),
+                placeName: result.formatted_address,
+                city: getComponent('locality'),
+                region: getComponent('administrative_area_level_1'),
+                country: getComponent('country'),
             };
         });
     },
 
     /**
-     * Reverse geocode coordinates to address using Mapbox
+     * Reverse geocode coordinates to address using Google Maps
      * Converts { lat, lng } → formatted address string
      */
     reverseGeocode: async (
         latitude: number,
         longitude: number
     ): Promise<ApiResponse<{ address: string; placeName: string }>> => {
-        if (!isMapboxConfigured()) {
+        if (!isGoogleMapsConfigured()) {
             return {
                 success: false,
-                error: 'Mapbox is not configured. Please add VITE_MAPBOX_ACCESS_TOKEN to .env.local',
+                error: 'Google Maps is not configured. Please add VITE_GOOGLE_MAPS_KEY to .env.local',
             };
         }
 
         return apiRequest(async () => {
-            // Remove types filter to allow any location data (address, place, region, etc.)
-            // This makes reverse geocoding more forgiving for coordinates without exact addresses
-            const url = `${MAPBOX_GEOCODING_API}/${longitude},${latitude}.json?access_token=${MAPBOX_ACCESS_TOKEN}`;
+            const url = `${GOOGLE_GEOCODING_API}?latlng=${latitude},${longitude}&key=${GOOGLE_MAPS_KEY}`;
 
             const response = await fetch(url);
             if (!response.ok) {
@@ -181,19 +179,18 @@ export const geolocationService = {
 
             const data = await response.json();
 
-            if (!data.features || data.features.length === 0) {
-                // Return a fallback location name with coordinates
+            if (data.status !== 'OK' || !data.results || data.results.length === 0) {
                 return {
                     address: `Location at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
                     placeName: `Location at ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
                 };
             }
 
-            const feature = data.features[0];
+            const result = data.results[0];
 
             return {
-                address: feature.place_name,
-                placeName: feature.place_name,
+                address: result.formatted_address,
+                placeName: result.formatted_address,
             };
         });
     },

@@ -155,13 +155,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     /**
      * Logout user
-     * Note: Don't set isLoading here to avoid blocking the UI during logout
+     * Clears all auth state so the next login starts fresh.
      */
     const logout = useCallback(async () => {
         try {
             await authService.logout();
         } finally {
             setUser(null);
+            setIsProfileLoading(true);
+            manualAuthInProgressRef.current = false;
         }
     }, []);
 

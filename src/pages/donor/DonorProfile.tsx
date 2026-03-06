@@ -146,15 +146,15 @@ const DonorProfile: React.FC = () => {
 
     const handleGeocode = async () => {
         if (!editAddress.trim()) return;
-        const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-        if (!MAPBOX_TOKEN) return;
+        const key = import.meta.env.VITE_GOOGLE_MAPS_KEY;
+        if (!key) return;
         try {
             const res = await fetch(
-                `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(editAddress)}.json?access_token=${MAPBOX_TOKEN}&limit=1`
+                `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(editAddress)}&key=${key}`
             );
             const json = await res.json();
-            if (json.features?.[0]) {
-                const [lng, lat] = json.features[0].center;
+            if (json.status === 'OK' && json.results?.[0]) {
+                const { lat, lng } = json.results[0].geometry.location;
                 setEditLat(lat);
                 setEditLng(lng);
             }
