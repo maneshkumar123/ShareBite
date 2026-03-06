@@ -201,34 +201,6 @@ const MiniMap: React.FC<{ lat: number; lng: number; title: string }> = ({ lat, l
     return <div ref={containerRef} className="ldp-mini-map" />;
 };
 
-// ─── Confirm Modal ─────────────────────────────────────────────────────────────
-
-const ConfirmModal: React.FC<{
-    title: string;
-    donorName: string;
-    isConfirming: boolean;
-    onConfirm: () => void;
-    onCancel: () => void;
-}> = ({ title, donorName, isConfirming, onConfirm, onCancel }) => (
-    <div className="ldp-modal-overlay" role="dialog" aria-modal="true" onClick={onCancel}>
-        <div className="ldp-modal" onClick={e => e.stopPropagation()}>
-            <p className="ldp-modal-label">Confirm claim</p>
-            <h3 className="ldp-modal-title">{title}</h3>
-            <p className="ldp-modal-donor">from {donorName}</p>
-            <p className="ldp-modal-note">
-                Once claimed the listing is removed from the pool.
-                Please collect before it expires.
-            </p>
-            <div className="ldp-modal-actions">
-                <button className="ldp-modal-cancel" onClick={onCancel} disabled={isConfirming}>Cancel</button>
-                <button className="ldp-modal-confirm" onClick={onConfirm} disabled={isConfirming}>
-                    {isConfirming ? <><SpinnerIcon /> Claiming…</> : 'Confirm Claim'}
-                </button>
-            </div>
-        </div>
-    </div>
-);
-
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 const ListingDetailPage: React.FC = () => {
