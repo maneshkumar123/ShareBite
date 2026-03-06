@@ -15,11 +15,13 @@ export const ROUTES = {
     DONOR_DASHBOARD: '/donor/dashboard',
     CREATE_LISTING: '/donor/create-listing',
     MY_LISTINGS: '/donor/listings',
+    DONOR_REQUESTS: '/donor/requests',
     PROFILE: '/profile',
     // Recipient
     RECIPIENT_DASHBOARD: '/recipient/dashboard',
     BROWSE_LISTINGS: '/recipient/browse',
     RECIPIENT_PROFILE: '/recipient/profile',
+    RECIPIENT_REQUESTS: '/recipient/requests',
     // Dynamic
     LISTING_DETAILS: '/listing/:id',
 } as const;
@@ -33,6 +35,8 @@ export const PAGE_TITLES: Record<string, string> = {
     '/recipient/dashboard': 'Dashboard',
     '/recipient/browse': 'Browse Food',
     '/recipient/profile': 'Profile',
+    '/donor/requests': 'Requests',
+    '/recipient/requests': 'Requests',
 };
 
 // API Endpoints (will be configured with Supabase)

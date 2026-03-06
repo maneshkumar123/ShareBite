@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@contexts/AuthContext';
 import { listingService } from '@services/listingService';
 import type { ListingDetail } from '@services/listingService';
+import { requestService } from '@services/requestService';
+import type { ClaimRequestStatus } from '@services/requestService';
+import { ROUTES } from '@utils/constants';
 import { importLibrary } from '@/lib/googleMaps';
 import './ListingDetailPage.css';
 
@@ -238,9 +241,12 @@ const ListingDetailPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     const [timeLeft, setTimeLeft] = useState('');
-    const [showModal, setShowModal] = useState(false);
-    const [claiming, setClaiming] = useState(false);
-    const [claimSuccess, setClaimSuccess] = useState(false);
+    const [myRequest, setMyRequest] = useState<{ id: string; status: ClaimRequestStatus } | null>(null);
+    const [showRequestForm, setShowRequestForm] = useState(false);
+    const [requestMessage, setRequestMessage] = useState('');
+    const [submittingRequest, setSubmittingRequest] = useState(false);
+    const [requestError, setRequestError] = useState<string | null>(null);
+    const [pendingCount, setPendingCount] = useState(0);
 
     useEffect(() => {
         if (!id) return;
@@ -262,31 +268,42 @@ const ListingDetailPage: React.FC = () => {
         return () => clearInterval(timer);
     }, [listing?.expiryTime]);
 
-    const handleClaim = useCallback(async () => {
-        if (!user?.id || !listing || claiming) return;
-        setClaiming(true);
-        try {
-            const res = await listingService.claimListing(listing.id, user.id);
-            if (res.success) {
-                setListing(prev => prev ? { ...prev, status: 'claimed' } : prev);
-                setClaimSuccess(true);
-                setShowModal(false);
-            } else {
-                setError(res.error ?? 'Failed to claim listing');
-                setShowModal(false);
-            }
-        } catch {
-            setError('An error occurred while claiming.');
-            setShowModal(false);
-        } finally {
-            setClaiming(false);
-        }
-    }, [user?.id, listing, claiming]);
-
     const isExpired  = listing ? new Date(listing.expiryTime).getTime() <= Date.now() : false;
     const isDonor    = user?.id === listing?.donorId;
     const isRecipient = !isDonor;
-    const canClaim   = isRecipient && listing?.status === 'available' && !isExpired && !claimSuccess;
+
+    // Load existing request state for recipient
+    useEffect(() => {
+        if (!listing || !user || isDonor) return;
+        requestService.getMyRequestForListing(listing.id, user.id).then(res => {
+            if (res.success && res.data) setMyRequest(res.data);
+        });
+    }, [listing?.id, user?.id, isDonor]);
+
+    // Load pending count for donor
+    useEffect(() => {
+        if (!listing || !isDonor) return;
+        requestService.getPendingCountsForListings([listing.id]).then(res => {
+            if (res.success && res.data) setPendingCount(res.data[listing.id] ?? 0);
+        });
+    }, [listing?.id, isDonor]);
+
+    const handleSubmitRequest = useCallback(async () => {
+        if (!user?.id || !listing || submittingRequest) return;
+        setSubmittingRequest(true);
+        setRequestError(null);
+        const res = await requestService.createRequest(listing.id, user.id, requestMessage || undefined);
+        if (res.success && res.data) {
+            setMyRequest({ id: res.data.requestId, status: 'pending' });
+            setShowRequestForm(false);
+            setRequestMessage('');
+        } else {
+            setRequestError(res.error ?? 'Failed to send request');
+        }
+        setSubmittingRequest(false);
+    }, [user?.id, listing, requestMessage, submittingRequest]);
+
+    const canRequest = isRecipient && listing?.status === 'available' && !isExpired && !myRequest;
 
     if (loading) {
         return (
@@ -315,7 +332,6 @@ const ListingDetailPage: React.FC = () => {
 
     const orgTypeLabel = ORG_TYPE_LABELS[listing.donorOrgType] ?? 'Donor';
     const hasMap = listing.lat != null && listing.lng != null;
-    const currentStatus = claimSuccess ? 'claimed' : listing.status;
 
     return (
         <div className="ldp-page">
@@ -325,7 +341,7 @@ const ListingDetailPage: React.FC = () => {
                 <button className="ldp-back-btn" onClick={() => navigate(-1)}>
                     <BackIcon /> Back
                 </button>
-                <StatusBadge status={currentStatus} />
+                <StatusBadge status={listing.status} />
             </div>
 
             {/* ── Editorial Header ─────────────────────────────── */}
@@ -419,23 +435,67 @@ const ListingDetailPage: React.FC = () => {
                     {/* Action */}
                     <div className="ldp-action">
                         {isDonor ? (
-                            <div className="ldp-your-listing">Your Listing</div>
-                        ) : claimSuccess ? (
-                            <div className="ldp-claim-success">
-                                <span className="ldp-claim-success-check">✓</span>
-                                <p>Successfully claimed. Please collect before expiry.</p>
+                            <div className="ldp-your-listing">
+                                Your Listing
+                                {pendingCount > 0 && (
+                                    <Link
+                                        to={ROUTES.DONOR_REQUESTS}
+                                        className="ldp-requests-link"
+                                        onClick={e => e.stopPropagation()}
+                                    >
+                                        {' '}· {pendingCount} pending request{pendingCount !== 1 ? 's' : ''} →
+                                    </Link>
+                                )}
                             </div>
-                        ) : listing.status === 'available' && !isExpired ? (
-                            <button
-                                className="ldp-claim-btn"
-                                onClick={() => setShowModal(true)}
-                                disabled={claiming}
-                            >
-                                {claiming ? <><SpinnerIcon /> Claiming…</> : 'Claim This Food'}
-                            </button>
+                        ) : myRequest ? (
+                            <div className={`ldp-request-status ldp-request-status--${myRequest.status}`}>
+                                {myRequest.status === 'pending'  && 'Request sent — waiting for donor'}
+                                {myRequest.status === 'accepted' && 'Request accepted! Contact donor to arrange pickup.'}
+                                {myRequest.status === 'rejected' && 'Request was not accepted.'}
+                                {myRequest.status === 'withdrawn' && 'Request withdrawn.'}
+                                <Link to={ROUTES.RECIPIENT_REQUESTS} className="ldp-requests-link">
+                                    View in My Requests →
+                                </Link>
+                            </div>
+                        ) : listing?.status === 'available' && !isExpired ? (
+                            showRequestForm ? (
+                                <div className="ldp-request-form">
+                                    <p className="ldp-request-form-label">Add a message (optional)</p>
+                                    <textarea
+                                        className="ldp-request-textarea"
+                                        placeholder="E.g. We're a food bank serving 50 families, can collect by 3 pm..."
+                                        value={requestMessage}
+                                        onChange={e => setRequestMessage(e.target.value)}
+                                        maxLength={500}
+                                        rows={3}
+                                        disabled={submittingRequest}
+                                    />
+                                    {requestError && <p className="ldp-request-error" role="alert">{requestError}</p>}
+                                    <div className="ldp-request-form-actions">
+                                        <button
+                                            className="ldp-request-cancel"
+                                            onClick={() => { setShowRequestForm(false); setRequestMessage(''); setRequestError(null); }}
+                                            disabled={submittingRequest}
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            className="ldp-request-submit"
+                                            onClick={handleSubmitRequest}
+                                            disabled={submittingRequest}
+                                        >
+                                            {submittingRequest ? <><SpinnerIcon /> Sending...</> : 'Send Request'}
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <button className="ldp-claim-btn" onClick={() => setShowRequestForm(true)}>
+                                    Request to Claim
+                                </button>
+                            )
                         ) : (
                             <div className="ldp-status-note">
-                                {listing.status === 'claimed'
+                                {listing?.status === 'claimed'
                                     ? 'This listing has already been claimed.'
                                     : 'This listing has expired.'}
                             </div>
@@ -453,7 +513,7 @@ const ListingDetailPage: React.FC = () => {
             </div>
 
             {/* ── Mobile Sticky Claim Bar ─────────────────────── */}
-            {canClaim && (
+            {canRequest && (
                 <div className="ldp-sticky-bar">
                     <div className="ldp-sticky-info">
                         <span className="ldp-sticky-title">{listing.title}</span>
@@ -461,24 +521,11 @@ const ListingDetailPage: React.FC = () => {
                     </div>
                     <button
                         className="ldp-sticky-claim-btn"
-                        onClick={() => setShowModal(true)}
-                        disabled={claiming}
+                        onClick={() => { setShowRequestForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                     >
-                        {claiming ? <SpinnerIcon /> : null}
-                        {claiming ? 'Claiming…' : 'Claim'}
+                        Request
                     </button>
                 </div>
-            )}
-
-            {/* ── Confirm Modal ────────────────────────────────── */}
-            {showModal && (
-                <ConfirmModal
-                    title={listing.title}
-                    donorName={listing.donorName}
-                    isConfirming={claiming}
-                    onConfirm={handleClaim}
-                    onCancel={() => setShowModal(false)}
-                />
             )}
         </div>
     );

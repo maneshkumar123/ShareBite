@@ -30,6 +30,8 @@ import DonorProfile from '@pages/donor/DonorProfile';
 import RecipientDashboard from '@pages/recipient/RecipientDashboard';
 import BrowseListings from '@pages/recipient/BrowseListings';
 import RecipientProfile from '@pages/recipient/RecipientProfile';
+import DonorRequests from '@pages/donor/DonorRequests';
+import RecipientRequests from '@pages/recipient/RecipientRequests';
 
 // Protected Pages - Listing Detail
 import ListingDetailPage from '@pages/listing/ListingDetailPage';
@@ -156,6 +158,7 @@ export const AppRouter: React.FC = () => {
                     <Route path={ROUTES.DONOR_DASHBOARD} element={<DonorDashboard />} />
                     <Route path={ROUTES.CREATE_LISTING} element={<CreateListing />} />
                     <Route path={ROUTES.MY_LISTINGS} element={<MyListings />} />
+                    <Route path={ROUTES.DONOR_REQUESTS} element={<DonorRequests />} />
                     <Route path={ROUTES.PROFILE} element={<DonorProfile />} />
                 </Route>
 
@@ -164,6 +167,7 @@ export const AppRouter: React.FC = () => {
                     <Route path="/recipient" element={<Navigate to={ROUTES.RECIPIENT_DASHBOARD} replace />} />
                     <Route path={ROUTES.RECIPIENT_DASHBOARD} element={<RecipientDashboard />} />
                     <Route path={ROUTES.BROWSE_LISTINGS} element={<BrowseListings />} />
+                    <Route path={ROUTES.RECIPIENT_REQUESTS} element={<RecipientRequests />} />
                     <Route path={ROUTES.RECIPIENT_PROFILE} element={<RecipientProfile />} />
                 </Route>
 

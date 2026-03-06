@@ -640,3 +640,66 @@
     .ldp-skeleton-left  { flex: 0 0 58%; }
     .ldp-skeleton-right { flex: 1; }
 }
+
+/* Request Status */
+.ldp-request-status {
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.ldp-request-status--pending  { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.25); color: #f59e0b; }
+.ldp-request-status--accepted { background: rgba(125,255,18,0.1); border: 1px solid rgba(125,255,18,0.25); color: #7DFF12; }
+.ldp-request-status--rejected,
+.ldp-request-status--withdrawn { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #888; }
+
+.ldp-requests-link { color: #7DFF12; text-decoration: none; font-size: 0.8125rem; }
+.ldp-requests-link:hover { text-decoration: underline; }
+
+/* Request Form */
+.ldp-request-form { display: flex; flex-direction: column; gap: 0.75rem; }
+.ldp-request-form-label { font-size: 0.8125rem; color: #888; margin: 0; }
+.ldp-request-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    color: #F7F7F7;
+    font-size: 0.875rem;
+    padding: 0.75rem;
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.5;
+}
+.ldp-request-textarea:focus { outline: none; border-color: rgba(125,255,18,0.4); }
+.ldp-request-error { font-size: 0.8125rem; color: #f87171; margin: 0; }
+.ldp-request-form-actions { display: flex; gap: 0.75rem; }
+.ldp-request-cancel {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #888;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+.ldp-request-submit {
+    flex: 2;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7DFF12, #5AC00A);
+    border: none;
+    color: #121212;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+.ldp-request-submit:disabled { opacity: 0.65; cursor: not-allowed; }

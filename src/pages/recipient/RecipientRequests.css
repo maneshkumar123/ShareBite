@@ -1,0 +1,124 @@
+.rreq-page {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.rreq-header {
+    padding: 1.5rem 1.5rem 1rem;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.rreq-header h1 { font-size: 1.5rem; font-weight: 700; color: #F7F7F7; margin: 0 0 0.25rem; }
+.rreq-subtitle { font-size: 0.875rem; color: #888; margin: 0; }
+
+.rreq-layout {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* List panel */
+.rreq-list-panel {
+    width: 320px;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(255,255,255,0.07);
+    overflow-y: auto;
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Chat panel */
+.rreq-chat-panel {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+/* Request card */
+.rreq-card {
+    width: 100%;
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 0.875rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+.rreq-card:hover,
+.rreq-card--active { background: rgba(125,255,18,0.06); border-color: rgba(125,255,18,0.2); }
+
+.rreq-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.rreq-card-title { font-size: 0.9375rem; font-weight: 600; color: #F7F7F7; }
+.rreq-unread {
+    min-width: 18px; height: 18px; padding: 0 5px;
+    border-radius: 9px; background: #7DFF12; color: #121212;
+    font-size: 0.6875rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+}
+.rreq-card-donor { font-size: 0.8125rem; color: #888; margin: 0; }
+.rreq-card-snippet {
+    font-size: 0.8125rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+}
+.rreq-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.25rem; }
+.rreq-status { font-size: 0.6875rem; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.rreq-status--pending   { background: rgba(245,158,11,0.12); color: #f59e0b; }
+.rreq-status--accepted  { background: rgba(125,255,18,0.12); color: #7DFF12; }
+.rreq-status--rejected,
+.rreq-status--withdrawn { background: rgba(255,255,255,0.06); color: #666; }
+.rreq-time { font-size: 0.6875rem; color: #555; }
+
+/* Empty / loading */
+.rreq-loading { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.rreq-skeleton {
+    height: 80px; border-radius: 12px;
+    background: linear-gradient(90deg, #1e1e1e 0px, #2a2a2a 200px, #1e1e1e 400px);
+    background-size: 400px;
+    animation: rreq-shimmer 1.4s infinite;
+}
+@keyframes rreq-shimmer { to { background-position: 400px 0; } }
+
+.rreq-empty { padding: 3rem 1.5rem; text-align: center; }
+.rreq-empty-title { font-size: 1rem; font-weight: 600; color: #F7F7F7; margin: 0 0 0.5rem; }
+.rreq-empty-sub { font-size: 0.875rem; color: #666; margin: 0; }
+
+.rreq-empty-chat { flex: 1; display: flex; align-items: center; justify-content: center; }
+.rreq-empty-chat p { font-size: 0.875rem; color: #555; }
+
+/* Back button (mobile only) */
+.rreq-back-btn {
+    display: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    color: #7DFF12;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+.rreq-chat-wrap { display: flex; flex-direction: column; height: 100%; }
+
+/* Mobile */
+@media (max-width: 768px) {
+    .rreq-list-panel { width: 100%; border-right: none; }
+    .rreq-list-panel--hidden-mobile { display: none; }
+    .rreq-chat-panel { position: absolute; inset: 0; z-index: 5; background: #121212; }
+    .rreq-chat-panel--hidden-mobile { display: none; }
+    .rreq-back-btn { display: block; }
+}

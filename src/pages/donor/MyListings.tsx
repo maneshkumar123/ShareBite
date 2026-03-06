@@ -4,6 +4,7 @@ import { useAuth } from '@contexts/AuthContext';
 import { listingService } from '@services/listingService';
 import type { DonorListing } from '@services/listingService';
 import { ROUTES } from '@utils/constants';
+import { requestService } from '@services/requestService';
 import './MyListings.css';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -236,6 +237,7 @@ const MyListings: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [editListing, setEditListing] = useState<DonorListing | null>(null);
     const [deleteId, setDeleteId] = useState<string | null>(null);
+    const [pendingCounts, setPendingCounts] = useState<Record<string, number>>({});
 
     const loadListings = useCallback(async () => {
         if (!user) return;
@@ -249,6 +251,15 @@ const MyListings: React.FC = () => {
     }, [user, filter]);
 
     useEffect(() => { loadListings(); }, [loadListings]);
+
+    useEffect(() => {
+        if (listings.length === 0) return;
+        const availableIds = listings.filter(l => l.status === 'available').map(l => l.id);
+        if (availableIds.length === 0) return;
+        requestService.getPendingCountsForListings(availableIds).then(res => {
+            if (res.success && res.data) setPendingCounts(res.data);
+        });
+    }, [listings]);
 
     return (
         <div className="ml-page">
@@ -310,6 +321,11 @@ const MyListings: React.FC = () => {
                                     <div className="ml-card-top">
                                         <h3 className="ml-card-title">{listing.title}</h3>
                                         <StatusPill status={listing.status} />
+                                        {(pendingCounts[listing.id] ?? 0) > 0 && (
+                                            <span className="ml-requests-badge">
+                                                {pendingCounts[listing.id]} req
+                                            </span>
+                                        )}
                                     </div>
                                     <span className="ml-card-qty">{listing.quantity} {listing.quantityUnit}</span>
                                     <div className="ml-card-meta">

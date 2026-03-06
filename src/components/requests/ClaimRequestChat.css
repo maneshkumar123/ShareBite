@@ -1,0 +1,243 @@
+.crc {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: #1a1a1a;
+}
+
+/* Listing summary card */
+.crc-listing-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+}
+.crc-listing-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #F7F7F7;
+    margin: 0 0 0.2rem;
+}
+.crc-listing-meta {
+    font-size: 0.8125rem;
+    color: #888;
+    margin: 0;
+}
+
+/* Status badge */
+.crc-badge {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.crc-badge--pending   { background: rgba(245,158,11,0.15); color: #f59e0b; }
+.crc-badge--accepted  { background: rgba(125,255,18,0.15); color: #7DFF12; }
+.crc-badge--rejected,
+.crc-badge--withdrawn { background: rgba(255,255,255,0.07); color: #888; }
+
+/* Accepted banner */
+.crc-accepted-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: rgba(125,255,18,0.08);
+    border-bottom: 1px solid rgba(125,255,18,0.2);
+    font-size: 0.8125rem;
+    color: #7DFF12;
+    flex-shrink: 0;
+}
+.crc-phone-link { color: #7DFF12; font-weight: 600; text-decoration: none; }
+.crc-phone-link:hover { text-decoration: underline; }
+
+/* Recipient info (donor view) */
+.crc-recipient-info {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+}
+.crc-recipient-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #F7F7F7;
+}
+.crc-recipient-org {
+    font-size: 0.8125rem;
+    color: #888;
+    margin-left: 0.5rem;
+}
+
+/* Messages list */
+.crc-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    min-height: 0;
+}
+.crc-no-messages {
+    font-size: 0.875rem;
+    color: #555;
+    text-align: center;
+    margin: auto;
+}
+.crc-msg { display: flex; flex-direction: column; max-width: 80%; }
+.crc-msg--own   { align-self: flex-end; align-items: flex-end; }
+.crc-msg--other { align-self: flex-start; align-items: flex-start; }
+.crc-msg-sender { font-size: 0.75rem; color: #888; margin: 0 0 0.25rem; }
+.crc-msg-bubble {
+    padding: 0.6rem 0.875rem;
+    border-radius: 14px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+.crc-msg--own   .crc-msg-bubble { background: #7DFF12; color: #121212; border-radius: 14px 14px 4px 14px; }
+.crc-msg--other .crc-msg-bubble { background: rgba(255,255,255,0.08); color: #F7F7F7; border-radius: 14px 14px 14px 4px; }
+.crc-msg-time { font-size: 0.6875rem; color: #555; margin: 0.25rem 0 0; }
+
+/* Input */
+.crc-input-row {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+    align-items: flex-end;
+}
+.crc-input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    color: #F7F7F7;
+    font-size: 0.875rem;
+    padding: 0.6rem 0.875rem;
+    resize: none;
+    font-family: inherit;
+    line-height: 1.5;
+}
+.crc-input:focus { outline: none; border-color: rgba(125,255,18,0.4); }
+.crc-send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #7DFF12;
+    border: none;
+    color: #121212;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.crc-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Closed note */
+.crc-closed-note {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.8125rem;
+    color: #555;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    flex-shrink: 0;
+}
+
+/* Actions */
+.crc-actions {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    flex-shrink: 0;
+}
+.crc-btn-accept {
+    flex: 2;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7DFF12, #5AC00A);
+    border: none;
+    color: #121212;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+.crc-btn-reject, .crc-btn-withdraw {
+    flex: 1;
+    padding: 0.75rem;
+    border-radius: 10px;
+    background: rgba(248,113,113,0.1);
+    border: 1px solid rgba(248,113,113,0.25);
+    color: #f87171;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+.crc-btn-accept:disabled,
+.crc-btn-reject:disabled,
+.crc-btn-withdraw:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Confirm modal */
+.crc-confirm-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: inherit;
+}
+.crc-confirm {
+    background: #242424;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 1.5rem;
+    max-width: 320px;
+    width: 90%;
+}
+.crc-confirm-text { font-size: 0.9375rem; color: #F7F7F7; margin: 0 0 1.25rem; line-height: 1.5; }
+.crc-confirm-actions { display: flex; gap: 0.75rem; }
+.crc-btn-cancel {
+    flex: 1;
+    padding: 0.7rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #888;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+/* Loading / error */
+.crc-loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.crc-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-top-color: #7DFF12;
+    border-radius: 50%;
+    animation: crc-spin 0.8s linear infinite;
+}
+@keyframes crc-spin { to { transform: rotate(360deg); } }
+.crc-error { padding: 2rem; text-align: center; color: #f87171; font-size: 0.875rem; }

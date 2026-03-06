@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ROUTES } from '@utils/constants';
+import { useAuth } from '@contexts/AuthContext';
+import { requestService } from '@services/requestService';
 import './Sidebar.css';
 
 interface SidebarProps {
@@ -73,24 +75,48 @@ const IconX = () => (
     </svg>
 );
 
+const IconInbox = () => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
+        <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+    </svg>
+);
+
 // ─── Nav data ─────────────────────────────────────────────────────────────────
 
 const DONOR_NAV: NavItem[] = [
     { path: ROUTES.DONOR_DASHBOARD, label: 'Dashboard', icon: <IconGrid /> },
     { path: ROUTES.CREATE_LISTING, label: 'New Listing', icon: <IconPlus /> },
     { path: ROUTES.MY_LISTINGS, label: 'My Listings', icon: <IconList /> },
+    { path: ROUTES.DONOR_REQUESTS, label: 'Requests', icon: <IconInbox /> },
     { path: ROUTES.PROFILE, label: 'Profile', icon: <IconUser /> },
 ];
 
 const RECIPIENT_NAV: NavItem[] = [
     { path: ROUTES.RECIPIENT_DASHBOARD, label: 'Dashboard', icon: <IconGrid /> },
     { path: ROUTES.BROWSE_LISTINGS, label: 'Browse Food', icon: <IconSearch /> },
+    { path: ROUTES.RECIPIENT_REQUESTS, label: 'Requests', icon: <IconInbox /> },
     { path: ROUTES.RECIPIENT_PROFILE, label: 'Profile', icon: <IconUser /> },
 ];
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, userRole }) => {
+    const { user } = useAuth();
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+        if (!user?.id) return;
+        const fetchUnread = () => {
+            requestService.getUnreadCount(user.id, userRole).then(res => {
+                if (res.success && res.data != null) setUnreadCount(res.data);
+            });
+        };
+        fetchUnread();
+        const interval = setInterval(fetchUnread, 30_000);
+        return () => clearInterval(interval);
+    }, [user?.id, userRole]);
+
     const navItems = userRole === 'donor' ? DONOR_NAV : RECIPIENT_NAV;
     const roleLabel = userRole === 'donor' ? 'Donor' : 'Recipient';
     const roleBadgeClass = userRole === 'donor' ? 'sb__role--donor' : 'sb__role--recipient';
@@ -115,24 +141,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, userRole }) =
             <nav className="sb__nav" role="navigation">
                 <p className="sb__section-label">Menu</p>
                 <ul className="sb__list">
-                    {navItems.map((item) => (
-                        <li key={item.path}>
-                            <NavLink
-                                to={item.path}
-                                onClick={onClose}
-                                end={
-                                    item.path === ROUTES.DONOR_DASHBOARD ||
-                                    item.path === ROUTES.RECIPIENT_DASHBOARD
-                                }
-                                className={({ isActive }) =>
-                                    `sb__link ${isActive ? 'sb__link--active' : ''}`
-                                }
-                            >
-                                <span className="sb__link-icon">{item.icon}</span>
-                                <span className="sb__link-label">{item.label}</span>
-                            </NavLink>
-                        </li>
-                    ))}
+                    {navItems.map((item) => {
+                        const isRequests =
+                            item.path === ROUTES.DONOR_REQUESTS ||
+                            item.path === ROUTES.RECIPIENT_REQUESTS;
+                        return (
+                            <li key={item.path}>
+                                <NavLink
+                                    to={item.path}
+                                    onClick={onClose}
+                                    end={
+                                        item.path === ROUTES.DONOR_DASHBOARD ||
+                                        item.path === ROUTES.RECIPIENT_DASHBOARD
+                                    }
+                                    className={({ isActive }) =>
+                                        `sb__link ${isActive ? 'sb__link--active' : ''}`
+                                    }
+                                >
+                                    <span className="sb__link-icon">{item.icon}</span>
+                                    <span className="sb__link-label">{item.label}</span>
+                                    {isRequests && unreadCount > 0 && (
+                                        <span className="sb__badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+                                    )}
+                                </NavLink>
+                            </li>
+                        );
+                    })}
                 </ul>
             </nav>
 

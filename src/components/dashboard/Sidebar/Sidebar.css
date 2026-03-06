@@ -273,3 +273,18 @@ li:last-child .sb__link {
     margin: 0;
     padding: 0.875rem 1.5rem;
 }
+
+.sb__badge {
+    margin-left: auto;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    background: #7DFF12;
+    color: #121212;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
